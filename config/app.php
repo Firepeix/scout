@@ -1,5 +1,8 @@
 <?php
 
+use App\Infrastructure\Providers\MangaServiceProvider;
+use App\Infrastructure\Providers\SourceServiceProvider;
+
 return [
 
     /*
@@ -174,6 +177,8 @@ return [
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
+        MangaServiceProvider::class,
+        SourceServiceProvider::class
 
     ],
 

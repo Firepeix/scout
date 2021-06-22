@@ -16,7 +16,7 @@ services:
       image: mongo:latest
       container_name: scout-database
       volumes:
-        - atlas-database-data:/data
+        - scout-database-data:/data
       ports:
         - 27016:27017
     php-fpm:
