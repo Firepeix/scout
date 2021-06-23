@@ -18,12 +18,11 @@ class ChapterCheckDecision
     
     public function hasNewChapter() : bool
     {
-        $chapter = is_numeric($this->chapterFound) ? $this->chapterFound - 1 : $this->chapterFound;
-        return $this->chapterFound !== 'NONE' && (string) $chapter !== $this->lastReadChapter;
+        return $this->chapterFound !== 'NONE' && $this->chapterFound !== $this->lastReadChapter;
     }
     
     public function getNewChapter() : string
     {
-        return is_numeric($this->chapterFound) ? $this->chapterFound - 1 : $this->chapterFound;
+        return $this->chapterFound;
     }
 }

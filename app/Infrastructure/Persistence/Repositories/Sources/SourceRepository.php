@@ -8,6 +8,7 @@ use App\Domain\Sources\Source;
 use App\Infrastructure\Persistence\Models\Sources\Source as SourceModel;
 use App\Infrastructure\Persistence\Repositories\AbstractRepository;
 use App\Infrastructure\Sources\MklotSource;
+use App\Infrastructure\Sources\MNatoSource;
 
 class SourceRepository extends AbstractRepository implements SourceRepositoryContract
 {
@@ -19,7 +20,8 @@ class SourceRepository extends AbstractRepository implements SourceRepositoryCon
     protected function map($model): Source
     {
         return [
-            MklotSource::TYPE => fn() => new MklotSource($model->template, $model->type)
+            MklotSource::TYPE => fn() => new MklotSource($model->template, $model->type),
+            MNatoSource::TYPE => fn() => new MNatoSource($model->template, $model->type)
         ][$model->type]();
     }
 }

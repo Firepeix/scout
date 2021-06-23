@@ -8,16 +8,16 @@ use App\Domain\Manga\SourcedVariation;
 use App\Domain\Sources\MangaSource;
 use Illuminate\Support\Collection;
 
-class MklotSource extends CrawlerSource implements MangaSource
+class MNatoSource extends CrawlerSource implements MangaSource
 {
-    public const TYPE = 1;
+    public const TYPE = 2;
     
     public function getLastChapter(SourcedVariation $manga): string
     {
         try {
             $crawler = $this->client->request('GET', $this->getUri($manga));
-            $text = $crawler->filter('.chapter_issue > a')->first()->text();
-            return Collection::make(explode(' ', $text))->last() - 1;
+            $text = $crawler->filter('.row-content-chapter a')->first()->attr('href');
+            return Collection::make(explode('-', $text))->last();
         }catch (\Exception $exception) {
             return 'NONE';
         }
