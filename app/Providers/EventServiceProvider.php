@@ -2,8 +2,10 @@
 
 namespace App\Providers;
 
-use App\Events\Homologation\NewBuildEvent;
-use App\Listeners\Homologation\StartBuild;
+use App\Application\Manga\Events\Check\CheckManga;
+use App\Application\Manga\Events\Check\MangaWasChecked;
+use App\Application\Manga\Listeners\Check\CheckMangaHandler;
+use App\Application\Manga\Listeners\Check\NewChapterSendNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 
 class EventServiceProvider extends ServiceProvider
@@ -14,9 +16,8 @@ class EventServiceProvider extends ServiceProvider
      * @var array
      */
     protected $listen = [
-        NewBuildEvent::class => [
-            StartBuild::class,
-        ],
+        CheckManga::class => [CheckMangaHandler::class],
+        MangaWasChecked::class => [NewChapterSendNotification::class]
     ];
 
     /**

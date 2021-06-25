@@ -70,7 +70,12 @@ return [
             'block_for' => null,
             'after_commit' => true,
         ],
-
+        'mongodb' => [
+            'driver' => 'mongodb',
+            'table' => 'jobs',
+            'queue' => 'default',
+            'expire' => 60,
+        ],
     ],
 
     /*

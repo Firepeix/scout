@@ -4,15 +4,17 @@
 namespace App\Console\Manga;
 
 
+use App\Application\Manga\ChapterCheckDecision;
 use App\Domain\Manga\Manga;
 use App\Domain\Manga\Services\MangaService;
 use Illuminate\Console\Command;
+use Illuminate\Support\Collection;
 
 class CheckChaptersCommand extends Command
 {
     private MangaService $service;
     
-    protected $signature = 'manga:check-chapters {id?} {name?}';
+    protected $signature = 'manga:check-chapters {id?} {name?} {--batch=0} {--batch-size=10} {--async}';
     
     public function __construct(MangaService $service)
     {
@@ -23,12 +25,18 @@ class CheckChaptersCommand extends Command
     public function handle() : void
     {
         $mangas = $this->service->chooseManga($this->argument('id'), $this->argument('name'));
-        $mangas->each(function (Manga $manga) {
-            $decision = $this->service->checkChapter($manga);
+        $mangas = $mangas->chunk($this->option('batch-size'))[$this->option('batch')] ?? new Collection();
+        $success = function (Manga $manga, ChapterCheckDecision $decision) {
             if ($decision->hasNewChapter()) {
                 $this->line("O manga <fg=cyan>{$manga->getName()}</> tem o novo capitulo: <fg=green>{$decision->getNewChapter()}</>");
             }
-        });
+        };
+        
+        if ($this->option('async')) {
+            $this->service->checkMangasAsync($mangas);
+            return;
+        }
+        $this->service->checkMangasSync($mangas, $success);
     }
     
 }

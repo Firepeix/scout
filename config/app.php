@@ -1,7 +1,9 @@
 <?php
 
 use App\Infrastructure\Providers\MangaServiceProvider;
+use App\Infrastructure\Providers\NotificationServiceProvider;
 use App\Infrastructure\Providers\SourceServiceProvider;
+use Jenssegers\Mongodb\MongodbQueueServiceProvider;
 
 return [
 
@@ -178,8 +180,9 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
         MangaServiceProvider::class,
-        SourceServiceProvider::class
-
+        SourceServiceProvider::class,
+        NotificationServiceProvider::class,
+        MongodbQueueServiceProvider::class
     ],
 
     /*
