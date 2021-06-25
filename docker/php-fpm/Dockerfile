@@ -17,5 +17,5 @@ RUN supervisord -c /etc/supervisor/supervisord.conf
 RUN cp /application/app/Infrastructure/Supervisor/scout-worker.conf /etc/supervisor/conf.d/scout-worker.conf
 RUN cp /application/app/Infrastructure/Supervisor/scheduler-worker.conf /etc/supervisor/conf.d/scheduler-worker.conf
 
-RUN superfisorctl reread
-RUN superfisorctl update
+RUN supervisorctl reread
+RUN supervisorctl update
