@@ -16,9 +16,12 @@ class SourceSeeder  extends Seeder
             ['name' => 'Mkalot', 'type' => MklotSource::TYPE, 'template' => 'https://mangakakalot.com/${MANGA-ID}'],
             ['name' => 'MNato', 'type' => MNatoSource::TYPE, 'template' => 'https://readmanganato.com/${MANGA-ID}']
         ];
+        $persistedSources = Source::all();
         foreach ($sources as $source) {
-            $entity = new Source($source);
-            $entity->save();
+            if ($persistedSources->where('type', $source['type'])->isEmpty()) {
+                $entity = new Source($source);
+                $entity->save();
+            }
         }
     }
 }

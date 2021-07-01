@@ -21,6 +21,15 @@ services:
         - 27016:27017
     php-fpm:
       build: docker/php-fpm
+      container_name: scout-app-api
+      working_dir: /application
+      volumes:
+        - .:/application
+        - ./docker/php-fpm/php-ini-overrides.ini:/etc/php/8.0/fpm/conf.d/99-overrides.ini
+      environment:
+        - PHP_IDE_CONFIG=serverName=APP
+    cli:
+      build: docker
       container_name: scout-app
       working_dir: /application
       volumes:
