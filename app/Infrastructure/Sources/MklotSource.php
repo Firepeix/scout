@@ -14,12 +14,8 @@ class MklotSource extends CrawlerSource implements MangaSource
     
     public function getLastChapter(SourcedVariation $manga): string
     {
-        try {
-            $crawler = $this->client->request('GET', $this->getUri($manga));
-            $text = $crawler->filter('.chapter_issue > a')->first()->text();
-            return Collection::make(explode(' ', $text))->last() - 1;
-        }catch (\Exception $exception) {
-            return 'NONE';
-        }
+        $crawler = $this->client->request('GET', $this->getUri($manga));
+        $text = $crawler->filter('.chapter_issue > a')->first()->text();
+        return Collection::make(explode(' ', $text))->last() - 1;
     }
 }

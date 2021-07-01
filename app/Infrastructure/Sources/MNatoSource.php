@@ -14,12 +14,8 @@ class MNatoSource extends CrawlerSource implements MangaSource
     
     public function getLastChapter(SourcedVariation $manga): string
     {
-        try {
-            $crawler = $this->client->request('GET', $this->getUri($manga));
-            $text = $crawler->filter('.row-content-chapter a')->first()->attr('href');
-            return Collection::make(explode('-', $text))->last();
-        }catch (\Exception $exception) {
-            return 'NONE';
-        }
+        $crawler = $this->client->request('GET', $this->getUri($manga));
+        $text = $crawler->filter('.row-content-chapter a')->first()->attr('href');
+        return Collection::make(explode('-', $text))->last();
     }
 }
