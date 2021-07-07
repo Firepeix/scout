@@ -1,5 +1,6 @@
 <?php
 
+use App\Infrastructure\Log\LogstashLogger;
 use Monolog\Handler\NullHandler;
 use Monolog\Handler\StreamHandler;
 use Monolog\Handler\SyslogUdpHandler;
@@ -99,6 +100,12 @@ return [
 
         'emergency' => [
             'path' => storage_path('logs/laravel.log'),
+        ],
+        'logstash' => [
+            'driver' => 'custom',
+            'via'    => LogstashLogger::class,
+            'host'   => env('LOGSTASH_HOST', '127.0.0.1'),
+            'port'   => env('LOGSTASH_PORT', 4718),
         ],
     ],
 

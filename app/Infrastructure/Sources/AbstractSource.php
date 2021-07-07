@@ -20,7 +20,7 @@ abstract class AbstractSource implements Source
     
     public function isSource(SourcedVariation $variation): bool
     {
-            return $this->type === $variation->getType();
+        return $this->type === $variation->getType();
     }
     
 }
