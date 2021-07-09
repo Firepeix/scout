@@ -3,7 +3,7 @@
 
 namespace Database\Seeders;
 
-use App\Infrastructure\Persistence\Models\Sources\Source;
+use App\Infrastructure\Persistence\Models\Sources\Source as SourceModel;
 use App\Infrastructure\Sources\MangaDexSource;
 use App\Infrastructure\Sources\MklotSource;
 use App\Infrastructure\Sources\MNatoSource;
@@ -19,10 +19,10 @@ class SourceSeeder  extends Seeder
             ['name' => 'Mangadex', 'type' => MangaDexSource::TYPE, 'template' => '']
         ];
         
-        $persistedSources = Source::all();
+        $persistedSources = SourceModel::all();
         foreach ($sources as $source) {
             if ($persistedSources->where('type', $source['type'])->isEmpty()) {
-                $entity = new Source($source);
+                $entity = new SourceModel($source);
                 $entity->save();
             }
         }

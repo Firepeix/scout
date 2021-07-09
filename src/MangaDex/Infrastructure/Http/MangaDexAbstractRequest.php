@@ -27,8 +27,9 @@ abstract class MangaDexAbstractRequest
         $options  = [
             'json'    => $this->getBody(),
             'query' => $this->getQuery(),
-            'headers' => ["Authorization Bearer {$this->authorizer->getBearerToken()}"]
+            'headers' => ['Authorization' => "Bearer {$this->authorizer->getBearerToken()}"]
         ];
+        
         $response = $this->client->request($this->method, $this->uri, $options);
         return $this->createResponse(json_decode($response->getBody()->getContents(), true));
     }

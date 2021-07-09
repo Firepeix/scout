@@ -33,7 +33,7 @@ class GoogleSheetMangaRepository extends AbstractRepository implements MangaRepo
     
     public function getAll(): Collection
     {
-        $mangas = $this->sheet->range('A1:E100')->get()->slice(1)->values();
+        $mangas = $this->sheet->range('A1:E500')->get()->slice(1)->values();
         return $this->filter($mangas)->map(fn ($model) => $this->map($model));
     }
     

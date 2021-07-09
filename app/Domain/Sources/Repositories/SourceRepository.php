@@ -8,5 +8,4 @@ use App\Domain\Shared\Repositories\Repository;
 
 interface SourceRepository extends Repository
 {
-
 }

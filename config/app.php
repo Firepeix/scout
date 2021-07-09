@@ -182,7 +182,9 @@ return [
         MangaServiceProvider::class,
         SourceServiceProvider::class,
         NotificationServiceProvider::class,
-        MongodbQueueServiceProvider::class
+        MongodbQueueServiceProvider::class,
+        Scout\Book\Infrastructure\Providers\ModuleServiceProvider::class,
+        Scout\Source\Infrastructure\Providers\ModuleServiceProvider::class
     ],
 
     /*

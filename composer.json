@@ -30,6 +30,8 @@
         "psr-4": {
             "App\\": "app/",
             "MangaDex\\": "src/MangaDex/",
+            "Shared\\": "src/Shared/",
+            "Scout\\": "src/Scout/",
             "Database\\Factories\\": "database/factories/",
             "Database\\Seeders\\": "database/seeders/"
         }
