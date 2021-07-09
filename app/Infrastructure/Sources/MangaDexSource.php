@@ -41,7 +41,7 @@ class MangaDexSource extends AbstractSource implements MangaSource, ConcreteSour
         $offset = 0;
         $mangas = new Collection();
         while ($offset < $total) {
-            $request  = new GetUserMangaRequest();
+            $request  = new GetUserMangaRequest(100, $offset);
             $response = $request->execute();
             $mangas   = $mangas->merge($response->getMangas());
             $offset   = $offset + 100;

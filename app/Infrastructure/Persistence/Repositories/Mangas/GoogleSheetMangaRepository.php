@@ -40,7 +40,7 @@ class GoogleSheetMangaRepository extends AbstractRepository implements MangaRepo
     private function filter(Collection $mangas) : Collection
     {
         return $mangas->filter(function (array $manga) {
-            return $this->filterIgnored($manga);
+            return $this->filterIgnored($manga) && !empty($manga);
         });
     }
     

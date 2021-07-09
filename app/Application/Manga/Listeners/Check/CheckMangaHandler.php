@@ -19,6 +19,7 @@ class CheckMangaHandler implements ShouldQueue
     
     public function handle(CheckManga $checkManga) : void
     {
+        sleep(5);
         $this->service->checkManga($checkManga->getManga());
     }
 }

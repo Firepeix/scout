@@ -78,7 +78,6 @@ class MangaService implements MangaServiceContract
     public function checkMangasAsync(Collection $mangas): void
     {
         $mangas->each(function (Manga $manga) {
-            sleep(2);
             event(new CheckManga($manga));
         });
     }
