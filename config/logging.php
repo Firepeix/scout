@@ -43,8 +43,9 @@ return [
         ],
 
         'single' => [
-            'driver' => 'single',
-            'path' => storage_path('logs/laravel.log'),
+            'driver' => 'custom',
+            'via'    => LogstashLogger::class,
+            'path' => storage_path('logs/app.log'),
             'level' => env('LOG_LEVEL', 'debug'),
         ],
 
@@ -71,6 +72,13 @@ return [
                 'host' => env('PAPERTRAIL_URL'),
                 'port' => env('PAPERTRAIL_PORT'),
             ],
+        ],
+
+        'stdout' => [
+            'driver' => 'custom',
+            'via'    => LogstashLogger::class,
+            'path' => '/dev/stdout',
+            'level' => env('LOG_LEVEL', 'debug'),
         ],
 
         'stderr' => [
