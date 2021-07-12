@@ -9,6 +9,7 @@ use App\Domain\Manga\Manga;
 use App\Domain\Manga\Services\MangaService;
 use Illuminate\Console\Command;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
 
 class CheckChaptersCommand extends Command
 {
@@ -24,6 +25,10 @@ class CheckChaptersCommand extends Command
     
     public function handle() : void
     {
+        if ($this->argument('id') === '1') {
+            Log::info(2);
+            return;
+        }
         $mangas = $this->service->chooseManga($this->argument('id'), $this->argument('name'));
         $mangas = $mangas->chunk($this->option('batch-size'))[$this->option('batch')] ?? new Collection();
         $success = function (Manga $manga, ChapterCheckDecision $decision) {
