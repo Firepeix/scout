@@ -27,6 +27,7 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
+        $schedule->command('log:check-error-overflow')->everyThirtyMinutes();
         $schedule->command('manga:check-chapters --batch-size=30 --async')->everyTenMinutes();
         $schedule->command('manga:check-chapters --batch-size=30 --batch=1 --async')->cron('*/12 * * * *');
         //$schedule->command('manga:check-chapters --batch-size=30 --batch=2 --async')->cron('*/23 * * * *');

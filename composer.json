@@ -32,6 +32,7 @@
             "MangaDex\\": "src/MangaDex/",
             "Shared\\": "src/Shared/",
             "Scout\\": "src/Scout/",
+            "Lancelot\\": "src/Lancelot/",
             "Database\\Factories\\": "database/factories/",
             "Database\\Seeders\\": "database/seeders/"
         }

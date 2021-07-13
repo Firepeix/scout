@@ -32,5 +32,5 @@ grep -q '^newrelic.distributed_tracing_enabled' $NEW_RELIC_INI && \
  sed -i 's/^newrelic.distributed_tracing_enabled.*/newrelic.distributed_tracing_enabled=true/' $NEW_RELIC_INI || \
  echo 'newrelic.distributed_tracing_enabled=true' >> $NEW_RELIC_INI
 
-cd /application && php artisan migrate --seed
+cd /application && php artisan migrate --seed && php artisan log:clean
 exec supervisord -c /application/app/Infrastructure/Supervisor/supervisord.conf

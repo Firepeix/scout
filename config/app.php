@@ -184,7 +184,8 @@ return [
         NotificationServiceProvider::class,
         MongodbQueueServiceProvider::class,
         Scout\Book\Infrastructure\Providers\ModuleServiceProvider::class,
-        Scout\Source\Infrastructure\Providers\ModuleServiceProvider::class
+        Scout\Source\Infrastructure\Providers\ModuleServiceProvider::class,
+        Lancelot\Log\Infrastructure\Providers\ModuleServiceProvider::class
     ],
 
     /*
