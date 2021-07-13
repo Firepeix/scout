@@ -10,6 +10,9 @@ then
     cd /application && composer install
 fi
 
+echo "starting" > /application/storage/logs/app.log
+
+
 #Install FileBeat
 filebeat modules enable logstash
 cp /application/src/Shared/Infrastructure/Logger/logstash.yml /etc/filebeat/modules.d/logstash.yml
@@ -22,13 +25,12 @@ service filebeat start
 sed -i \
     -e "s/newrelic.license =.*/newrelic.license=\"${NEW_RELIC_KEY}\"/" \
     -e "s/newrelic.appname[[:space:]]=[[:space:]].*/newrelic.appname=\"Scout\"/" \
-    -e "s/;\?newrelic.framework =.*/newrelic.framework = \laravel/" \
+    -e "s/;\?newrelic.framework =.*/newrelic.framework = \llaravel/" \
     $NEW_RELIC_INI
 
 grep -q '^newrelic.distributed_tracing_enabled' $NEW_RELIC_INI && \
  sed -i 's/^newrelic.distributed_tracing_enabled.*/newrelic.distributed_tracing_enabled=true/' $NEW_RELIC_INI || \
  echo 'newrelic.distributed_tracing_enabled=true' >> $NEW_RELIC_INI
-
 
 cd /application && php artisan migrate --seed
 exec supervisord -c /application/app/Infrastructure/Supervisor/supervisord.conf

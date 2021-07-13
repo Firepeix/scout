@@ -16,4 +16,6 @@ interface SourcedVariation
     public function addDecision(ChapterCheckDecision $decision) : void;
     
     public function getExternalId() : string;
+    
+    public function toArray() : array;
 }

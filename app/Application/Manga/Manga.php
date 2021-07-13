@@ -34,4 +34,18 @@ class Manga implements MangaContract
     {
         return $this->sourcedVariations;
     }
+    
+    public function toArray() : array
+    {
+        return [
+            'name' => $this->name,
+            'lastReadChapter' => $this->lastReadChapter
+        ];
+    }
+    
+    public function jsonSerialize() : array
+    {
+        return $this->toArray();
+    }
+    
 }

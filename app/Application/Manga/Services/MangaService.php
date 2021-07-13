@@ -15,16 +15,19 @@ use App\Domain\Sources\Repositories\SourceRepository;
 use App\Domain\Sources\Source;
 use Closure;
 use Illuminate\Support\Collection;
+use Psr\Log\LoggerInterface;
 
 class MangaService implements MangaServiceContract
 {
     private MangaRepository $repository;
     private SourceRepository $sourceRepository;
+    private LoggerInterface $logger;
     
-    public function __construct(MangaRepository $repository, SourceRepository $sourceRepository)
+    public function __construct(MangaRepository $repository, SourceRepository $sourceRepository, LoggerInterface $logger)
     {
         $this->repository = $repository;
         $this->sourceRepository = $sourceRepository;
+        $this->logger = $logger;
     }
     
     public function chooseManga(string $id = null, string $name = null): Collection
@@ -45,7 +48,9 @@ class MangaService implements MangaServiceContract
             return $sources->first(function (Source $source) use ($variation, $manga){
                 if ($source->isSource($variation)) {
                     $lastChapter = $source->getLastChapter($variation);
-                    $variation->addDecision(new ChapterCheckDecision($lastChapter, $manga->getLastReadChapter()));
+                    $decision = new ChapterCheckDecision($lastChapter, $manga->getLastReadChapter());
+                    $this->logger->info('Manga Checado', ['Manga' => $manga->toArray(), 'Source' => $source->toArray(), 'Variation' => $variation->toArray(), 'Decision' => $decision->toArray(), 'Event' => CheckManga::NAME]);
+                    $variation->addDecision($decision);
                     return $variation->getDecision()->hasNewChapter();
                 }
                 

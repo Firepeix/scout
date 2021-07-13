@@ -15,4 +15,6 @@ interface Manga
     public function getLastReadChapter() : string;
     
     public function getSourcedVariations(): Collection;
+    
+    public function toArray() : array;
 }

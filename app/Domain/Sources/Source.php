@@ -10,4 +10,6 @@ interface Source
     public function isSource(SourcedVariation $variation) : bool;
     
     public function getLastChapter(SourcedVariation $manga) : string;
+    
+    public function toArray() : array;
 }

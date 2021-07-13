@@ -21,8 +21,8 @@ class SourceRepository extends AbstractRepository implements SourceRepositoryCon
     protected function map($model): Source
     {
         return [
-            MklotSource::TYPE => fn() => new MklotSource($model->template, $model->type),
-            MNatoSource::TYPE => fn() => new MNatoSource($model->template, $model->type),
+            MklotSource::TYPE => fn() => new MklotSource($model->template, $model->type, $model->name),
+            MNatoSource::TYPE => fn() => new MNatoSource($model->template, $model->type, $model->name),
             MangaDexSource::TYPE => fn() => new MangaDexSource($model->type)
         ][$model->type]();
     }

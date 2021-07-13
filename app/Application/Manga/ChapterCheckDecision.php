@@ -25,4 +25,12 @@ class ChapterCheckDecision
     {
         return $this->chapterFound;
     }
+    
+    public function toArray() : array
+    {
+        return [
+            'chapterFound' => $this->chapterFound,
+            'lastReadChapter' => $this->lastReadChapter
+        ];
+    }
 }

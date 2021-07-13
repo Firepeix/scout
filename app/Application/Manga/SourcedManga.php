@@ -38,4 +38,11 @@ class SourcedManga implements SourcedVariation
         return $this->externalId;
     }
     
+    public function toArray(): array
+    {
+        return [
+            'type' => $this->type,
+            'externalId' => $this->externalId
+        ];
+    }
 }

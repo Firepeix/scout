@@ -13,9 +13,9 @@ abstract class CrawlerSource  extends AbstractSource implements MangaSource
 {
     protected Client $client;
     
-    public function __construct(string $template, int $type)
+    public function __construct(string $template, int $type, string $name)
     {
-        parent::__construct($template, $type);
+        parent::__construct($template, $type, $name);
         $this->client = new Client();
     }
     

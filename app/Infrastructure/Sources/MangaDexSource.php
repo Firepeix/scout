@@ -16,7 +16,7 @@ class MangaDexSource extends AbstractSource implements MangaSource, ConcreteSour
     
     public function __construct(int $type)
     {
-        parent::__construct(config('mangadex.uri'), $type);
+        parent::__construct(config('mangadex.uri'), $type, 'MangaDex');
     }
     
     public function getLastChapter(SourcedVariation $manga): string

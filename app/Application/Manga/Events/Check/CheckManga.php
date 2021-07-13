@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\Event;
 
 class CheckManga extends Event
 {
+    public const NAME = 'CheckManga';
+    
     private Manga $manga;
     
     public function __construct(Manga $manga)
