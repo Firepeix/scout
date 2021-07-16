@@ -4,12 +4,12 @@
 namespace App\Infrastructure\Sources;
 
 
-use App\Domain\Manga\SourcedVariation;
-use App\Domain\Sources\MangaSource;
 use Goutte\Client;
 use Illuminate\Support\Str;
+use Scout\Source\Domain\ConcreteSourceInterface;
+use Scout\Source\Domain\SourcedObject;
 
-abstract class CrawlerSource  extends AbstractSource implements MangaSource
+abstract class CrawlerSource  extends AbstractSource  implements ConcreteSourceInterface
 {
     protected Client $client;
     
@@ -19,8 +19,8 @@ abstract class CrawlerSource  extends AbstractSource implements MangaSource
         $this->client = new Client();
     }
     
-    protected function getUri(SourcedVariation $manga) : string
+    protected function getUri(SourcedObject $object) : string
     {
-        return Str::replace('${MANGA-ID}', $manga->getExternalId(), $this->template);
+        return Str::replace('${MANGA-ID}', $object->getSourcedId(), $this->template);
     }
 }

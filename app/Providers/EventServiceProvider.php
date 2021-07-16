@@ -2,11 +2,11 @@
 
 namespace App\Providers;
 
-use App\Application\Manga\Events\Check\CheckManga;
-use App\Application\Manga\Events\Check\MangaWasChecked;
 use App\Application\Manga\Listeners\Check\CheckMangaHandler;
 use App\Application\Manga\Listeners\Check\NewChapterSendNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
+use Scout\Book\Domain\Events\Check\AfterBookCheck;
+use Scout\Book\Domain\Events\Check\CheckBook;
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -16,8 +16,8 @@ class EventServiceProvider extends ServiceProvider
      * @var array
      */
     protected $listen = [
-        CheckManga::class => [CheckMangaHandler::class],
-        MangaWasChecked::class => [NewChapterSendNotification::class]
+        CheckBook::class       => [CheckMangaHandler::class],
+        AfterBookCheck::class => [NewChapterSendNotification::class]
     ];
 
     /**

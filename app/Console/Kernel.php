@@ -2,7 +2,6 @@
 
 namespace App\Console;
 
-use App\Console\Manga\CheckChaptersCommand;
 use App\Console\Notification\SendNotificationCommand;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
@@ -15,7 +14,6 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        CheckChaptersCommand::class,
         SendNotificationCommand::class
     ];
 

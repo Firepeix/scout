@@ -4,17 +4,17 @@
 namespace MangaDex\Infrastructure\Http\Chapter;
 
 
-use App\Domain\Manga\SourcedVariation as Manga;
 use MangaDex\Infrastructure\Http\MangaDexAbstractRequest;
+use Scout\Source\Domain\SourcedObject;
 
 class GetMangaChaptersRequest extends MangaDexAbstractRequest
 {
     private const URI = 'chapter';
     private const METHOD = 'GET';
     
-    private Manga $manga;
+    private SourcedObject $manga;
     
-    public function __construct(Manga $manga)
+    public function __construct(SourcedObject $manga)
     {
         parent::__construct(self::METHOD, self::URI);
         $this->manga = $manga;
@@ -23,7 +23,7 @@ class GetMangaChaptersRequest extends MangaDexAbstractRequest
     protected function getQuery(): array
     {
         return [
-            'manga' => $this->manga->getExternalId(),
+            'manga' => (string) $this->manga->getSourcedId(),
             'translatedLanguage' => ['en'],
             'order' => [
                 'chapter' => 'desc'

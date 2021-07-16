@@ -3,7 +3,6 @@
 
 namespace App\Infrastructure\Sources;
 
-use App\Domain\Manga\SourcedVariation;
 use App\Domain\Sources\Source;
 
 abstract class AbstractSource implements Source
@@ -17,11 +16,6 @@ abstract class AbstractSource implements Source
         $this->template = $template;
         $this->type     = $type;
         $this->name     = $name;
-    }
-    
-    public function isSource(SourcedVariation $variation): bool
-    {
-        return $this->type === $variation->getType();
     }
     
     public function toArray(): array

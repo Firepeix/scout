@@ -22,17 +22,17 @@ class Manga implements SourcedObject
         $this->title = new Title($content['data']['attributes']['title']['en']);
     }
     
-    public function getType(): Type
+    public function getSourcedType(): Type
     {
         return new Type(MangaDexSource::TYPE);
     }
     
-    public function getExternalId(): Id
+    public function getSourcedId(): Id
     {
         return $this->id;
     }
     
-    public function getName(): StringValueObject
+    public function getSourcedName(): StringValueObject
     {
         return $this->title;
     }

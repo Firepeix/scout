@@ -10,9 +10,9 @@ use Shared\Domain\ValueObject\StringValueObject;
 
 interface SourcedObject
 {
-    public function getType() : Type;
+    public function getSourcedType() : Type;
     
-    public function getExternalId() : Id;
+    public function getSourcedId() : Id;
     
-    public function getName() : StringValueObject;
+    public function getSourcedName() : StringValueObject;
 }

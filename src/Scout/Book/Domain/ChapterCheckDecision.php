@@ -1,8 +1,6 @@
 <?php
 
-
-namespace App\Application\Manga;
-
+namespace Scout\Book\Domain;
 
 class ChapterCheckDecision
 {

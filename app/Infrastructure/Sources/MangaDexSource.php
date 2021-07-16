@@ -2,15 +2,13 @@
 
 namespace App\Infrastructure\Sources;
 
-use App\Domain\Manga\SourcedVariation;
-use App\Domain\Sources\MangaSource;
 use Illuminate\Support\Collection;
 use MangaDex\Infrastructure\Http\Chapter\GetMangaChaptersRequest;
 use MangaDex\Infrastructure\Http\User\Manga\GetUserMangaRequest;
 use Scout\Source\Domain\ConcreteSourceInterface;
 use Scout\Source\Domain\SourcedObject;
 
-class MangaDexSource extends AbstractSource implements MangaSource, ConcreteSourceInterface
+class MangaDexSource extends AbstractSource implements ConcreteSourceInterface
 {
     public const TYPE = 3;
     
@@ -19,20 +17,10 @@ class MangaDexSource extends AbstractSource implements MangaSource, ConcreteSour
         parent::__construct(config('mangadex.uri'), $type, 'MangaDex');
     }
     
-    public function getLastChapter(SourcedVariation $manga): string
-    {
-        $request = new GetMangaChaptersRequest($manga);
-        return $request->execute()->getLastChapterNumber();
-    }
-    
-    public function belongsToSource(SourcedObject $object): bool
-    {
-        return false;
-    }
-    
     public function getLastUpdate(SourcedObject $object): string
     {
-        return '';
+        $request = new GetMangaChaptersRequest($object);
+        return $request->execute()->getLastChapterNumber();
     }
     
     public function getFollowedSourcedObjects(): Collection

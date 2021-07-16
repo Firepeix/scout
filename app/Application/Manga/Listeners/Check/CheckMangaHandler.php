@@ -4,22 +4,26 @@
 namespace App\Application\Manga\Listeners\Check;
 
 
-use App\Application\Manga\Events\Check\CheckManga;
-use App\Domain\Manga\Services\MangaService;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Scout\Book\Domain\BookServiceInterface;
+use Scout\Book\Domain\Events\Check\CheckBook;
+use Scout\Source\Domain\SourceRepository;
 
 class CheckMangaHandler implements ShouldQueue
 {
-    private MangaService $service;
+    private BookServiceInterface $service;
+    private SourceRepository $sourceRepository;
     
-    public function __construct(MangaService $service)
+    public function __construct(BookServiceInterface $service, SourceRepository $sourceRepository)
     {
         $this->service = $service;
+        $this->sourceRepository = $sourceRepository;
     }
     
-    public function handle(CheckManga $checkManga) : void
+    public function handle(CheckBook $checkBook) : void
     {
-        sleep(5);
-        $this->service->checkManga($checkManga->getManga());
+        $book = $checkBook->getBook();
+        $source = $this->sourceRepository->findSourceByType($book->getSourceType());
+        $this->service->checkBook($checkBook->getBook(), $source);
     }
 }

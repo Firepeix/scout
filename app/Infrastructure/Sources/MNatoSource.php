@@ -4,18 +4,24 @@
 namespace App\Infrastructure\Sources;
 
 
-use App\Domain\Manga\SourcedVariation;
-use App\Domain\Sources\MangaSource;
 use Illuminate\Support\Collection;
+use Scout\Source\Domain\SourcedObject;
 
-class MNatoSource extends CrawlerSource implements MangaSource
+class MNatoSource extends CrawlerSource
 {
     public const TYPE = 2;
     
-    public function getLastChapter(SourcedVariation $manga): string
+    public function getLastUpdate(SourcedObject $object): string
     {
-        $crawler = $this->client->request('GET', $this->getUri($manga));
+        $crawler = $this->client->request('GET', $this->getUri($object));
         $text = $crawler->filter('.row-content-chapter a')->first()->attr('href');
         return Collection::make(explode('-', $text))->last();
     }
+    
+    public function getFollowedSourcedObjects(): Collection
+    {
+        return new Collection();
+    }
+    
+    
 }

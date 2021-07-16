@@ -4,18 +4,22 @@
 namespace App\Infrastructure\Sources;
 
 
-use App\Domain\Manga\SourcedVariation;
-use App\Domain\Sources\MangaSource;
 use Illuminate\Support\Collection;
+use Scout\Source\Domain\SourcedObject;
 
-class MklotSource extends CrawlerSource implements MangaSource
+class MklotSource extends CrawlerSource
 {
     public const TYPE = 1;
     
-    public function getLastChapter(SourcedVariation $manga): string
+    public function getLastUpdate(SourcedObject $object): string
     {
-        $crawler = $this->client->request('GET', $this->getUri($manga));
+        $crawler = $this->client->request('GET', $this->getUri($object));
         $text = $crawler->filter('.chapter_issue > a')->first()->text();
         return Collection::make(explode(' ', $text))->last() - 1;
+    }
+    
+    public function getFollowedSourcedObjects(): Collection
+    {
+        return new Collection();
     }
 }

@@ -4,10 +4,10 @@
 namespace App\Application\Manga\Listeners\Check;
 
 
-use App\Application\Manga\Events\Check\MangaWasChecked;
 use App\Domain\Notification\Services\NotificationService;
 use App\Domain\Notification\TextMessage;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Scout\Book\Domain\Events\Check\AfterBookCheck;
 
 class NewChapterSendNotification implements ShouldQueue
 {
@@ -20,12 +20,12 @@ class NewChapterSendNotification implements ShouldQueue
         $this->message = $message;
     }
     
-    public function handle(MangaWasChecked $mangaWasChecked) : void
+    public function handle(AfterBookCheck $afterBookCheck) : void
     {
-        $decision = $mangaWasChecked->getDecision();
-        $manga = $mangaWasChecked->getManga();
+        $decision = $afterBookCheck->getDecision();
+        $book = $afterBookCheck->getBook();
         if ($decision->hasNewChapter()) {
-            $message = $this->message->init("O manga <b>{$manga->getName()}</b> tem o novo capitulo: <b>{$decision->getNewChapter()}</b>");
+            $message = $this->message->init("O manga <b>{$book->getTitle()}</b> tem o novo capitulo: <b>{$decision->getNewChapter()}</b>");
             $this->service->send($message, (int) env('CHAT_ID'));
         }
     }

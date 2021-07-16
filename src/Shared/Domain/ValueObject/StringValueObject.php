@@ -3,7 +3,9 @@
 namespace Shared\Domain\ValueObject;
 
 
-abstract class StringValueObject
+use JsonSerializable;
+
+abstract class StringValueObject implements JsonSerializable
 {
     protected ?string $value;
 
@@ -22,9 +24,13 @@ abstract class StringValueObject
         return $this->value() === $object->value();
     }
 
-
     public function __toString(): string
     {
         return $this->value();
+    }
+    
+    public function jsonSerialize() : string
+    {
+        return $this;
     }
 }

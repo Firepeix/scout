@@ -25,6 +25,4 @@ abstract class AbstractRepository implements Repository
     {
         return $this->map($this->model::find($id));
     }
-    
-    abstract protected function map($model) : mixed;
 }

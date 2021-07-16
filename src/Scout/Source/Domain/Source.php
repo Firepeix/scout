@@ -27,17 +27,12 @@ class Source implements SourceInterface
         $this->concreteSource = $this->createConcrete();
     }
     
-    public function hasObject(SourcedObject $object): bool
-    {
-        return $this->concreteSource->belongsToSource($object);
-    }
-    
     protected function createConcrete(): ConcreteSourceInterface
     {
         $type = $this->type->value();
         return [
-                   MklotSource::TYPE    => fn() => new MklotSource($this->template->value(), $type),
-                   MNatoSource::TYPE    => fn() => new MNatoSource($this->template->value(), $type),
+                   MklotSource::TYPE    => fn() => new MklotSource($this->template->value(), $type, class_basename(MklotSource::class)),
+                   MNatoSource::TYPE    => fn() => new MNatoSource($this->template->value(), $type, class_basename(MNatoSource::class)),
                    MangaDexSource::TYPE => fn() => new MangaDexSource($type)
                ][$type]();
     }
@@ -50,5 +45,20 @@ class Source implements SourceInterface
     public function getId(): SourceId
     {
         return $this->id;
+    }
+    
+    public function getType(): Type
+    {
+        return $this->type;
+    }
+    
+    public function getLastUpdate(SourcedObject $object): string
+    {
+        return $this->concreteSource->getLastUpdate($object);
+    }
+    
+    public function toArray(): array
+    {
+        return $this->concreteSource->toArray();
     }
 }
