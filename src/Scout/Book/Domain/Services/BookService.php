@@ -69,7 +69,7 @@ class BookService implements BookServiceInterface
     public function checkBooksAsync(Collection $books): void
     {
         $books->each(function (Book $book){
-            sleep(0.5);
+            sleep(1);
             event(new CheckBook($book));
         });
     }
