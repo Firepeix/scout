@@ -11,6 +11,7 @@ then
 fi
 
 echo "starting" > /application/storage/logs/app.log
+echo "starting" > /application/storage/logs/backup.log
 
 
 #Install FileBeat

@@ -12,4 +12,7 @@ class LogModel extends Model
 {
     protected $connection = 'chest';
     protected $collection = 'logs';
+    
+    protected $dates = ['@timestamp'];
+    
 }

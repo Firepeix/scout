@@ -39,4 +39,16 @@ class LogRepository implements LogRepositoryInterface
             $model->delete();
         });
     }
+    
+    public function insert(array $log): void
+    {
+        $model = new LogModel();
+        foreach ($log as $prop => $item) {
+            $model->{$prop} = $item;
+        }
+        $model->{'@timestamp'} = Carbon::parse($log['@timestamp'])->subHours(3);
+        $model->save();
+    }
+    
+    
 }

@@ -9,7 +9,9 @@ use Illuminate\Support\Collection;
 
 interface LogRepositoryInterface
 {
-    public function getErrorLogsSince(Carbon $carbon) : Collection;
+    public function getErrorLogsSince(Carbon $carbon): Collection;
     
-    public function cleanLogs() : void;
+    public function cleanLogs(): void;
+    
+    public function insert(array $log): void;
 }

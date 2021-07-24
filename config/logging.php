@@ -1,6 +1,8 @@
 <?php
 
 use App\Infrastructure\Log\LogstashLogger;
+use Lancelot\Log\Infrastructure\Events\NewLogEvent;
+use Lancelot\Log\Infrastructure\Log\LancelotLogger;
 use Monolog\Handler\NullHandler;
 use Monolog\Handler\StreamHandler;
 use Monolog\Handler\SyslogUdpHandler;
@@ -38,7 +40,7 @@ return [
     'channels' => [
         'stack' => [
             'driver' => 'stack',
-            'channels' => ['single'],
+            'channels' => ['lancelot', 'backup'],
             'ignore_exceptions' => false,
         ],
 
@@ -46,6 +48,20 @@ return [
             'driver' => 'custom',
             'via'    => LogstashLogger::class,
             'path' => storage_path('logs/app.log'),
+            'level' => env('LOG_LEVEL', 'debug'),
+        ],
+        
+        'backup' => [
+            'driver' => 'custom',
+            'via'    => LogstashLogger::class,
+            'path' => storage_path('logs/backup.log'),
+            'level' => env('LOG_LEVEL', 'debug'),
+        ],
+        
+        'lancelot' => [
+            'driver' => 'custom',
+            'via'    => LancelotLogger::class,
+            'event' => NewLogEvent::class,
             'level' => env('LOG_LEVEL', 'debug'),
         ],
 

@@ -1,9 +1,6 @@
 <?php
 
-
 namespace Lancelot\Log\Domain\Services;
-
-
 
 use Illuminate\Support\Collection;
 use Lancelot\Log\Domain\LogServiceInterface;

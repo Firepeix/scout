@@ -9,6 +9,10 @@ use Lancelot\Log\Application\CheckErrors\CheckErrorsAlert;
 use Lancelot\Log\Application\CheckErrors\CheckErrorsAlertCommandHandler;
 use Lancelot\Log\Application\Clean\CleanLogsCommand;
 use Lancelot\Log\Application\Clean\CleanLogsCommandHandler;
+use Lancelot\Log\Application\Create\CreateLogCommand;
+use Lancelot\Log\Application\Create\CreateLogCommandHandler;
+use Lancelot\Log\Application\Write\WriteLogCommand;
+use Lancelot\Log\Application\Write\WriteLogCommandHandler;
 
 class BusServiceProvider extends ServiceProvider
 {
@@ -21,7 +25,9 @@ class BusServiceProvider extends ServiceProvider
     {
         $commands = [
             CheckErrorsAlert::class => CheckErrorsAlertCommandHandler::class,
-            CleanLogsCommand::class => CleanLogsCommandHandler::class
+            CleanLogsCommand::class => CleanLogsCommandHandler::class,
+            WriteLogCommand::class => WriteLogCommandHandler::class,
+            CreateLogCommand::class => CreateLogCommandHandler::class
         ];
         Bus::map($commands);
     }
