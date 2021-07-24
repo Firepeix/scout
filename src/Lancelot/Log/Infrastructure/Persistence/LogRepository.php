@@ -27,7 +27,7 @@ class LogRepository implements LogRepositoryInterface
     
     public function getErrorLogsSince(Carbon $carbon): Collection
     {
-        return $this->model::where('@timestamp', '>', $carbon)
+        return $this->model::where('@timestamp', '>', $carbon->subHours(3))
             ->where('level', Log::ERROR)->get()->map(fn (LogModel $model) => $this->map($model));
     }
     
