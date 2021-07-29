@@ -2,10 +2,12 @@ version: "3.1"
 volumes:
   scout-database-data:
     driver: local
+  grail-database-data:
+    driver: local
 services:
     webserver:
       image: nginx:alpine
-      container_name: scout-server
+      container_name: Server
       working_dir: /application
       volumes:
           - .:/application
@@ -14,14 +16,15 @@ services:
        - "80:80"
     mongo:
       image: mongo:latest
-      container_name: scout-database
+      container_name: Chest
+      hostname: chest
       volumes:
         - scout-database-data:/data
       ports:
         - 27016:27017
     php-fpm:
       build: docker/php-fpm
-      container_name: scout-app-api
+      container_name: CLI
       working_dir: /application
       volumes:
         - .:/application
@@ -30,11 +33,39 @@ services:
         - PHP_IDE_CONFIG=serverName=APP
     cli:
       build: docker
-      container_name: scout-app
+      container_name: Scout
       working_dir: /application
       volumes:
         - .:/application
         - ./docker/php-fpm/php-ini-overrides.ini:/etc/php/8.0/fpm/conf.d/99-overrides.ini
       environment:
         - PHP_IDE_CONFIG=serverName=APP
+    grail:
+      image: postgres:latest
+      container_name: Grail
+      hostname: grail
+      env_file:
+        - ./.env
+      environment:
+        POSTGRES_USER: "${DB_GRAIL_USER}"
+        POSTGRES_DB: "${DB_GRAIL_DATABASE}"
+        POSTGRES_PASSWORD: "${DB_GRAIL_PASSWORD}"
+      volumes:
+        - grail-database-data:/var/lib/postgresql/data
+      ports:
+      - 5432:5432
+    metabase:
+      image: metabase/metabase
+      container_name: Visualizer
+      env_file:
+        - ./.env
+      environment:
+        MB_DB_TYPE: postgres
+        MB_DB_DBNAME: "${DB_GRAIL_DATABASE}"
+        MB_DB_PORT: "${DB_GRAIL_PORT}"
+        MB_DB_USER: "${DB_GRAIL_USER}"
+        MB_DB_PASS: "${DB_GRAIL_PASSWORD}"
+        MB_DB_HOST: "${DB_GRAIL_HOST}"
+      ports:
+        - 3000:3000
 
