@@ -14,5 +14,4 @@ class CheckErrorsOverflowed extends AbstractCommand
         $this->dispatcher->dispatchNow(new CheckErrorsAlert());
         $this->info('Sucesso: Alerta Enviado!');
     }
-    
 }

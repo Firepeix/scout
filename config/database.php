@@ -117,6 +117,20 @@ return [
                 'database' => env('DB_AUTHENTICATION_DATABASE', 'admin'), // required with Mongo 3+
             ],
         ],
+        
+        'grail' => [
+            'driver' => 'pgsql',
+            'host' => env('DB_GRAIL_HOST', '127.0.0.1'),
+            'port' => env('DB_GRAIL_PORT', '5432'),
+            'database' => env('DB_GRAIL_DATABASE', 'forge'),
+            'username' => env('DB_GRAIL_USER', 'forge'),
+            'password' => env('DB_GRAIL_PASSWORD', ''),
+            'charset' => 'utf8',
+            'prefix' => '',
+            'prefix_indexes' => true,
+            'schema' => 'public',
+            'sslmode' => 'prefer',
+        ],
     ],
 
     /*

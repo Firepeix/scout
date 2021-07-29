@@ -17,15 +17,9 @@ class Kernel extends ConsoleKernel
         SendNotificationCommand::class
     ];
 
-    /**
-     * Define the application's command schedule.
-     *
-     * @param  \Illuminate\Console\Scheduling\Schedule  $schedule
-     * @return void
-     */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->command('log:check-error-overflow')->everyThirtyMinutes();
+        //$schedule->command('log:check-error-overflow')->everyThirtyMinutes();
         $schedule->command('manga:check-chapters --batch-size=30 --async')->everyTenMinutes();
         $schedule->command('manga:check-chapters --batch-size=30 --batch=1 --async')->cron('*/12 * * * *');
         //$schedule->command('manga:check-chapters --batch-size=30 --batch=2 --async')->cron('*/23 * * * *');

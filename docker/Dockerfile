@@ -7,10 +7,7 @@ RUN apt-get update \
     && apt-get -y install git \
     && apt-get -y install supervisor \
     && apt-get -y install wget \
-    && curl -L -O https://artifacts.elastic.co/downloads/beats/filebeat/filebeat-7.13.3-amd64.deb \
-    && sudo dpkg -i filebeat-7.13.3-amd64.deb \
-    && rm filebeat-7.13.3-amd64.deb
-
+    && curl -L -O https://artifacts.elastic.co/downloads/beats/filebeat/filebeat-7.13.3-amd64.deb
 
 
 # INSTALL NEW-RELIC
