@@ -40,7 +40,7 @@ class Pulse
                 continue;
             }
             
-            if (self::ROWS_CONDITION !== $this->alertCondition->value()) {
+            if (self::ROWS_CONDITION === $this->alertCondition->value()) {
                 return false;
             }
             
