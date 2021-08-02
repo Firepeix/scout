@@ -5,29 +5,17 @@ use App\Infrastructure\Providers\SourceServiceProvider;
 use Jenssegers\Mongodb\MongodbQueueServiceProvider;
 
 return [
-
     'name' => env('APP_NAME', 'Laravel'),
-
     'env' => env('APP_ENV', 'production'),
-
     'debug' => (bool) env('APP_DEBUG', false),
-
     'url' => env('APP_URL', 'http://localhost'),
-
     'asset_url' => env('ASSET_URL', null),
-
     'timezone' => 'America/Sao_Paulo',
-
     'locale' => 'pt_BR',
-
     'fallback_locale' => 'pt_BR',
-
     'faker_locale' => 'en_US',
-
     'key' => env('APP_KEY'),
-
     'cipher' => 'AES-256-CBC',
-
     'providers' => [
         Illuminate\Auth\AuthServiceProvider::class,
         Illuminate\Broadcasting\BroadcastServiceProvider::class,
@@ -53,7 +41,6 @@ return [
         Illuminate\View\ViewServiceProvider::class,
         App\Providers\AppServiceProvider::class,
         App\Providers\AuthServiceProvider::class,
-        // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
         SourceServiceProvider::class,
@@ -62,9 +49,10 @@ return [
         Scout\Book\Infrastructure\Providers\ModuleServiceProvider::class,
         Scout\Source\Infrastructure\Providers\ModuleServiceProvider::class,
         Lancelot\Log\Infrastructure\Providers\ModuleServiceProvider::class,
-        Lancelot\Pulse\Infrastructure\Providers\ModuleServiceProvider::class
+        Lancelot\Pulse\Infrastructure\Providers\ModuleServiceProvider::class,
+        Lancelot\Context\Infrastructure\Providers\ModuleServiceProvider::class,
+        Notification\Infrastructure\Providers\ModuleServiceProvider::class
     ],
-
     'aliases' => [
 
         'App' => Illuminate\Support\Facades\App::class,
@@ -106,5 +94,4 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
 
     ],
-
 ];

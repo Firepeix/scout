@@ -6,6 +6,9 @@ namespace App\Application\Notification;
 
 use App\Domain\Notification\TextMessage as TextMessageContract;
 
+/**
+ * @deprecated
+ */
 class TextMessage implements TextMessageContract
 {
     private string $content;

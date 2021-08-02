@@ -51,8 +51,11 @@ class Pulse
     
     private function check(Collection $rows) : bool
     {
-    
+        return $rows->isNotEmpty();
     }
     
-    
+    public function getName(): string
+    {
+        return $this->name->value();
+    }
 }

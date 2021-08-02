@@ -1,11 +1,8 @@
 <?php
 
-
 namespace Lancelot\Pulse\Domain\ValueObject;
 
-
 use Illuminate\Support\Collection;
-use Lancelot\Pulse\Domain\ValueObject\Report\Query;
 
 class Report
 {

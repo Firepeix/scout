@@ -9,6 +9,9 @@ use App\Domain\Notification\Services\NotificationService;
 use Longman\TelegramBot\Request;
 use Longman\TelegramBot\Telegram;
 
+/**
+ * @deprecated
+ */
 class TelegramNotificationService implements NotificationService
 {
     private Telegram $telegram;
