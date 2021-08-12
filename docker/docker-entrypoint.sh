@@ -1,4 +1,5 @@
 #!/usr/bin/env sh
+
 if [ ! -d "/application/vendor" ]; then
   cd /application && composer install
 fi
