@@ -1,4 +1,5 @@
 #!/usr/bin/env sh
+NEW_RELIC_INI=$(php -r "echo(PHP_CONFIG_FILE_SCAN_DIR);")/20-newrelic.ini
 
 if [ ! -d "/application/vendor" ]; then
   cd /application && composer install
