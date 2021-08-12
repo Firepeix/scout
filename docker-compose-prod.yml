@@ -1,0 +1,48 @@
+version: "3.1"
+volumes:
+  scout-database-data:
+    driver: local
+  grail-database-data:
+    driver: local
+services:
+    mongo:
+      image: mongo:latest
+      container_name: Chest
+      hostname: chest
+      volumes:
+        - scout-database-data:/data
+      ports:
+        - 27017:27017
+    application:
+      image: scout-prod:build-1
+      container_name: Scout
+      working_dir: /application
+    grail:
+      image: postgres:latest
+      container_name: Grail
+      hostname: grail
+      env_file:
+        - ./.env.prod
+      environment:
+        POSTGRES_USER: "${DB_GRAIL_USER}"
+        POSTGRES_DB: "${DB_GRAIL_DATABASE}"
+        POSTGRES_PASSWORD: "${DB_GRAIL_PASSWORD}"
+      volumes:
+        - grail-database-data:/var/lib/postgresql/data
+      ports:
+      - 5432:5432
+    metabase:
+      image: metabase/metabase
+      container_name: Visualizer
+      env_file:
+        - ./.env.prod
+      environment:
+        MB_DB_TYPE: postgres
+        MB_DB_DBNAME: "${DB_GRAIL_DATABASE}"
+        MB_DB_PORT: "${DB_GRAIL_PORT}"
+        MB_DB_USER: "${DB_GRAIL_USER}"
+        MB_DB_PASS: "${DB_GRAIL_PASSWORD}"
+        MB_DB_HOST: "${DB_GRAIL_HOST}"
+      ports:
+        - 3000:3000
+

@@ -4,11 +4,8 @@ ARG DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update \
     && apt-get -y --no-install-recommends install  php8.0-mysql php8.0-pgsql php8.0-redis php8.0-sqlite3 php8.0-bz2 php8.0-gd php8.0-igbinary php8.0-imap php8.0-ldap php8.0-odbc php8.0-soap php8.0-yaml php8.0-mongodb \
-    && apt-get -y install git \
     && apt-get -y install supervisor \
-    && apt-get -y install wget \
-    && curl -L -O https://artifacts.elastic.co/downloads/beats/filebeat/filebeat-7.13.3-amd64.deb
-
+    && apt-get -y install wget
 
 # INSTALL NEW-RELIC
 
