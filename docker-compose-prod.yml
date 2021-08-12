@@ -14,15 +14,22 @@ services:
       ports:
         - 27017:27017
     application:
-      image: scout-prod:build-1
+      build: docker
       container_name: Scout
       working_dir: /application
+      volumes:
+        - .:/application
+        - ./docker/php-fpm/php-ini-overrides.ini:/etc/php/8.0/fpm/conf.d/99-overrides.ini
+      environment:
+        - PHP_IDE_CONFIG=serverName=APP
+      env_file:
+        - ./.env
     grail:
       image: postgres:latest
       container_name: Grail
       hostname: grail
       env_file:
-        - ./.env.prod
+        - ./.env
       environment:
         POSTGRES_USER: "${DB_GRAIL_USER}"
         POSTGRES_DB: "${DB_GRAIL_DATABASE}"
@@ -35,7 +42,7 @@ services:
       image: metabase/metabase
       container_name: Visualizer
       env_file:
-        - ./.env.prod
+        - ./.env
       environment:
         MB_DB_TYPE: postgres
         MB_DB_DBNAME: "${DB_GRAIL_DATABASE}"
