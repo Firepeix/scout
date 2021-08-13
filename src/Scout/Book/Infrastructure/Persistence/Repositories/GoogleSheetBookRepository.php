@@ -10,20 +10,19 @@ use Scout\Book\Domain\BookRepositoryInterface;
 use Scout\Book\Domain\ValueObject\ExternalId;
 use Scout\Book\Domain\ValueObject\Id as BookId;
 use Scout\Book\Domain\ValueObject\LastChapterRead;
+use Scout\Book\Domain\ValueObject\ParentId;
 use Scout\Book\Domain\ValueObject\SourceType;
 use Scout\Book\Domain\ValueObject\Title;
 use Scout\Book\Infrastructure\Persistence\GoogleSheets\BookModel;
-use Scout\Shared\Infrastructure\Persistence\AbstractRepository;
 use Shared\Domain\ValueObject\Id;
 
 
-class GoogleSheetBookRepository extends AbstractRepository implements BookRepositoryInterface
+class GoogleSheetBookRepository implements BookRepositoryInterface
 {
     private Factory $sheet;
 
     public function __construct(Factory $sheet)
     {
-        parent::__construct();
         $this->sheet = $sheet->spreadsheet(env('SHEET_ID'))->sheet('Main');
     }
     
@@ -59,35 +58,33 @@ class GoogleSheetBookRepository extends AbstractRepository implements BookReposi
     
     protected function map(BookModel $model): Book
     {
-        return new Book(
-            new BookId($model->getId()),
-            new Title($model->getTitle()),
-            new LastChapterRead($model->getLastReadChapter()),
-            new ExternalId($model->getExternalId()),
-            new SourceType($model->getSourceType())
-        );
+        ;
     }
     
-    public function getMainBooks(string $id = null, string $name = null): Collection
+    public function getMainBooks(string $id = null, string $name = null, bool $filterIgnored = true): Collection
     {
         if ($id === null && $name === null) {
-            return $this->getAll();
+            return $this->getAll($filterIgnored);
         }
     
         return new Collection([$this->find(new Id($id))]);
     }
     
-    public function getAll(): Collection
+    private function getAll(bool $filterIgnored): Collection
     {
         $books = $this->sheet->range('A1:G500')->get()->slice(1)->values();
-        return $this->process($books);
+        return $this->process($books, $filterIgnored);
     }
     
-    private function filter(Collection $books) : Collection
+    private function filter(Collection $books, bool $filterIgnored) : Collection
     {
-        return $books->filter(function (BookModel $book) {
-            return $this->filterIgnored($book);
-        });
+        if ($filterIgnored) {
+            return $books->filter(function (BookModel $book) {
+                return $this->filterIgnored($book);
+            });
+        }
+        
+       return $books;
     }
     
     private function filterIgnored(BookModel $book) : bool
@@ -99,10 +96,28 @@ class GoogleSheetBookRepository extends AbstractRepository implements BookReposi
         return true;
     }
     
-    private function process(Collection $books) : Collection
+    private function process(Collection $books, bool $filterIgnored) : Collection
     {
         $books = $books->filter(fn (array $attributes) => !empty($attributes));
         $books->transform(fn (array $attributes) => new BookModel($attributes));
-        return $this->filter($books)->map(fn ($model) => $this->map($model));
+        return $this->filter($books, $filterIgnored)->map(function (BookModel $model) {
+            $book = new Book(
+                new BookId($model->getId()),
+                new Title($model->getTitle()),
+                new LastChapterRead($model->getLastReadChapter()),
+                new ExternalId($model->getExternalId()),
+                new SourceType($model->getSourceType())
+            );
+            
+            if ($model->getIgnoreUntil() !== null) {
+                $book->setIgnoredUntil($model->getIgnoreUntil());
+            }
+            
+            if ($model->getParentId() !== null) {
+                $book->setParentId(new ParentId($model->getParentId()));
+            }
+            
+            return $book;
+        });
     }
 }

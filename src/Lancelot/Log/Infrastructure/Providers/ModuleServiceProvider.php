@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Lancelot\Log\Infrastructure\Providers;
-
 
 use Illuminate\Support\ServiceProvider;
 
@@ -14,5 +12,6 @@ class ModuleServiceProvider extends ServiceProvider
         $this->app->register(BusServiceProvider::class);
         $this->app->register(CommandServiceProvider::class);
         $this->app->register(EventServiceProvider::class);
+        $this->app->register(RouteServiceProvider::class);
     }
 }

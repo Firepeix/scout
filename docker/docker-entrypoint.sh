@@ -7,7 +7,7 @@ fi
 
 echo "starting" >/application/storage/logs/app.log
 echo "starting" >/application/storage/logs/backup.log
-
+service php8.0-fpm start
 if [ $APP_ENV != 'local' ]; then
   sed -i \
     -e "s/newrelic.license =.*/newrelic.license=\"${NEW_RELIC_KEY}\"/" \

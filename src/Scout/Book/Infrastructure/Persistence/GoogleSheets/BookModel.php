@@ -60,7 +60,7 @@ class BookModel
         return $this->sourceType;
     }
     
-    public function getParentId(): int
+    public function getParentId(): ?int
     {
         return $this->parentId;
     }
