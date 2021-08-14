@@ -16,6 +16,7 @@ class BookModel
     private const SOURCE_TYPE_FIELD  = 5;
     private const PARENT_ID_FIELD    = 6;
     
+    private int    $position;
     private int     $id;
     private string  $title;
     private string  $lastReadChapter;
@@ -24,7 +25,7 @@ class BookModel
     private int     $sourceType;
     private ?int    $parentId;
     
-    public function __construct(array $attributes)
+    public function __construct(int $position, array $attributes)
     {
         $this->id              = $attributes[self::ID_FIELD];
         $this->title           = $attributes[self::TITLE_FIELD];
@@ -33,6 +34,7 @@ class BookModel
         $this->ignoreUntil     = $attributes[self::IGNORE_UNTIL_FIELD] !== '' ? Carbon::parse($attributes[self::IGNORE_UNTIL_FIELD]) : null;
         $this->sourceType      = $attributes[self::SOURCE_TYPE_FIELD];
         $this->parentId        = $attributes[self::PARENT_ID_FIELD] ?? null;
+        $this->position = $position;
     }
     
     public function getId(): int
@@ -58,6 +60,11 @@ class BookModel
     public function getSourceType(): int
     {
         return $this->sourceType;
+    }
+    
+    public function getPosition(): int
+    {
+        return $this->position;
     }
     
     public function getParentId(): ?int

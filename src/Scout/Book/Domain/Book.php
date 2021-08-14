@@ -25,6 +25,7 @@ final class Book implements SourcedObject
     private SourceType      $sourceType;
     private ?Carbon         $ignoredUntil = null;
     private ?ParentId       $parentId     = null;
+    private ?int            $internalId    = null;
     
     public function __construct(?Id $id, Title $title, LastChapterRead $lastChapterRead, ExternalId $externalId, SourceType $sourceType)
     {
@@ -97,5 +98,15 @@ final class Book implements SourcedObject
     public function setParentId(ParentId $parentId): void
     {
         $this->parentId = $parentId;
+    }
+    
+    public function getInternalId(): ?int
+    {
+        return $this->internalId;
+    }
+    
+    public function setInternalId(int $internalId): void
+    {
+        $this->internalId = $internalId;
     }
 }

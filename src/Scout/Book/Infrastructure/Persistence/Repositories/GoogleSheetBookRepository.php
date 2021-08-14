@@ -49,17 +49,17 @@ class GoogleSheetBookRepository implements BookRepositoryInterface
         });
     }
     
-    public function find(Id $id): mixed
+    public function find(Id $id): Book
     {
-        #TODO Adicionar
-        dd($id);
+        $books = $this->getAll(false);
+        dd($books);
     }
     
-    
-    protected function map(BookModel $model): Book
+    public function updateBook(Book $book): void
     {
-        ;
+    
     }
+    
     
     public function getMainBooks(string $id = null, string $name = null, bool $filterIgnored = true): Collection
     {
@@ -72,7 +72,8 @@ class GoogleSheetBookRepository implements BookRepositoryInterface
     
     private function getAll(bool $filterIgnored): Collection
     {
-        $books = $this->sheet->range('A1:G500')->get()->slice(1)->values();
+        //$books = $this->sheet->range('A1:G500')->get()->slice(1)->values();
+        $books = cache()->get('asd');
         return $this->process($books, $filterIgnored);
     }
     
@@ -96,10 +97,10 @@ class GoogleSheetBookRepository implements BookRepositoryInterface
         return true;
     }
     
-    private function process(Collection $books, bool $filterIgnored) : Collection
+    private function process(Collection $baseBooks, bool $filterIgnored) : Collection
     {
-        $books = $books->filter(fn (array $attributes) => !empty($attributes));
-        $books->transform(fn (array $attributes) => new BookModel($attributes));
+        $books = new Collection();
+        $baseBooks->each(fn (array $attributes, int $index) => !empty($attributes) ? $books->push(new BookModel($index + 1, $attributes)) : null);
         return $this->filter($books, $filterIgnored)->map(function (BookModel $model) {
             $book = new Book(
                 new BookId($model->getId()),
@@ -108,15 +109,17 @@ class GoogleSheetBookRepository implements BookRepositoryInterface
                 new ExternalId($model->getExternalId()),
                 new SourceType($model->getSourceType())
             );
+    
+            $book->setInternalId($model->getPosition());
             
             if ($model->getIgnoreUntil() !== null) {
                 $book->setIgnoredUntil($model->getIgnoreUntil());
             }
-            
+    
             if ($model->getParentId() !== null) {
                 $book->setParentId(new ParentId($model->getParentId()));
             }
-            
+    
             return $book;
         });
     }

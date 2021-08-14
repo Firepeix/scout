@@ -2,35 +2,71 @@
 <html lang="pt" class="has-navbar-fixed-top">
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/@mdi/font@4.x/css/materialdesignicons.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
     <title>Scout</title>
-    <link rel="stylesheet" href="{{ asset('/bulma/css/bulma.min.css')  }}">
     <link rel="stylesheet" href="{{ asset('/app/main.css')  }}">
-    <link rel="stylesheet" href="https://bulma.io/vendor/fontawesome-free-5.15.2-web/css/all.min.css">
 </head>
 <body>
-<section class="section">
-    <nav class="navbar is-fixed-top is-danger has-shadow" role="navigation" aria-label="main navigation">
-        <div class="navbar-brand">
-            <span class="navbar-item">
-                Scout
-            </span>
-        </div>
-        <div class="navbar-menu">
-            <div class="navbar-start">
-                <a class="navbar-item is-active" href="{{  url('/')  }}">
-                    Dashboard
-                </a>
-            </div>
-        </div>
-    </nav>
-    <div class="container">
-        <div class="columns">
-            <div class="column is-full">
-                @yield('content')
-            </div>
-        </div>
-    </div>
-</section>
+<div id="app">
+    <v-app>
+        <v-app-bar color="red" dark>
+            <v-app-bar-nav-icon></v-app-bar-nav-icon>
+            <v-toolbar-title>Scout</v-toolbar-title>
+        </v-app-bar>
+
+        <v-main style="padding-top: 1.5rem">
+            <v-container>
+                <v-row>
+                    <v-col>
+                        @yield('content')
+                    </v-col>
+                </v-row>
+            </v-container>
+            <v-snackbar :timeout="2500" color="success" v-model="successBar.status">
+                <v-icon>mdi-check-circle</v-icon> @{{ successBar.message }} @{{snackMessage}}
+            </v-snackbar>
+            <v-snackbar :timeout="2500" color="red" v-model="errorBar.status">
+                <v-icon>mdi-close-circle</v-icon> @{{ errorBar.message }} @{{snackMessage}}
+            </v-snackbar>
+        </v-main>
+    </v-app>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
+<script>
+    window.ENV = {
+      URL: window.location.href.replace(/\/$/, '')
+    }
+
+    window.alerts = {
+      data: {
+        snackMessage: '',
+        successBar: {
+          status: false,
+          message: 'Sucesso: '
+        },
+        errorBar: {
+          status: false,
+          message: 'Erro: '
+        }
+      },
+      methods: {
+        displayError (message = 'Ops, Algo de errado não esta certo!') {
+          this.snackMessage = message;
+          this.errorBar.status = true;
+        },
+
+        displaySuccess (message) {
+          this.snackMessage = message;
+          this.successBar.status = true;
+        }
+      }
+    }
+</script>
+@stack('script')
 </body>
 </html>
