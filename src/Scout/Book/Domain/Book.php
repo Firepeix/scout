@@ -4,9 +4,12 @@
 namespace Scout\Book\Domain;
 
 
+use Carbon\Carbon;
+use JsonSerializable;
 use Scout\Book\Domain\ValueObject\ExternalId;
 use Scout\Book\Domain\ValueObject\Id;
 use Scout\Book\Domain\ValueObject\LastChapterRead;
+use Scout\Book\Domain\ValueObject\ParentId;
 use Scout\Book\Domain\ValueObject\SourceType;
 use Scout\Book\Domain\ValueObject\Title;
 use Scout\Source\Domain\SourcedObject;
@@ -14,15 +17,17 @@ use Scout\Source\Domain\ValueObject\Type;
 use Shared\Domain\ValueObject\Id as SourcedId;
 use Shared\Domain\ValueObject\StringValueObject;
 
-class Book implements SourcedObject
+final class Book implements SourcedObject, JsonSerializable
 {
-    private ? Id              $id;
+    private ?Id             $id;
     private Title           $title;
     private LastChapterRead $lastChapterRead;
     private ExternalId      $externalId;
     private SourceType      $sourceType;
+    private ?Carbon         $ignoredUntil = null;
+    private ?ParentId       $parentId     = null;
     
-    public function __construct(? Id $id, Title $title, LastChapterRead $lastChapterRead, ExternalId $externalId, SourceType $sourceType)
+    public function __construct(?Id $id, Title $title, LastChapterRead $lastChapterRead, ExternalId $externalId, SourceType $sourceType)
     {
         $this->id              = $id;
         $this->title           = $title;
@@ -66,12 +71,57 @@ class Book implements SourcedObject
         return $this->lastChapterRead;
     }
     
-    public function toArray() : array
+    public function read(LastChapterRead $readUpto) : void
+    {
+        $this->lastChapterRead = $readUpto;
+    }
+    
+    public function toArray(): array
     {
         return [
-            'name' => $this->title->value(),
+            'name'            => $this->title->value(),
             'lastReadChapter' => $this->lastChapterRead->value(),
-            'externalId' => $this->externalId->value()
+            'externalId'      => $this->externalId->value()
         ];
+    }
+    
+    public function getIgnoredUntil(): ?Carbon
+    {
+        return $this->ignoredUntil;
+    }
+    
+    public function setIgnoredUntil(Carbon $ignoredUntil): void
+    {
+        $this->ignoredUntil = $ignoredUntil;
+    }
+    
+    public function getParentId(): ?ParentId
+    {
+        return $this->parentId;
+    }
+    
+    public function setParentId(ParentId $parentId): void
+    {
+        $this->parentId = $parentId;
+    }
+    
+    public function getExternalId(): ExternalId
+    {
+        return $this->externalId;
+    }
+    
+    public function jsonSerialize() : array
+    {
+        return [
+            'id' => $this->getId(),
+            'title' => $this->getTitle(),
+            'lastChapterRead' => $this->getLastChapterRead(),
+            'ignoredUntil' => $this->getIgnoredUntil() !== null ? $this->getIgnoredUntil()->format('d/m/Y') : null,
+        ];
+    }
+    
+    public function turnOn() : void
+    {
+        $this->ignoredUntil = null;
     }
 }

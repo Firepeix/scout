@@ -3,7 +3,7 @@
 
 namespace Shared\UI\Listeners;
 
-use Illuminate\Bus\Dispatcher;
+use Illuminate\Contracts\Bus\Dispatcher;
 
 abstract class AbstractListener
 {
