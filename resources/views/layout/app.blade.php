@@ -9,10 +9,13 @@
     <script src="{{asset('js/moment.js')}}"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
     <title>Scout</title>
-    <link rel="stylesheet" href="{{ asset('/app/main.css')  }}">
+    <link rel="stylesheet" href="{{ asset('app/main.css')  }}">
 </head>
 <body>
-<div id="app">
+<div class="loading-wrapper">
+    @component('components.loading')@endcomponent
+</div>
+<div id="wrap-app" style="display: none">
     <v-app>
         <v-app-bar color="red" dark>
             <v-app-bar-nav-icon></v-app-bar-nav-icon>
@@ -41,6 +44,19 @@
 <script>
     window.ENV = {
       URL: window.location.href.replace(/\/$/, '')
+    }
+
+    function load (status = true) {
+      setTimeout(() => {
+        const content = document.querySelector('#wrap-app')
+        const loading = document.querySelector('.loading-wrapper')
+        if (content !== null && loading !== null) {
+          if (status) {
+            content.style.display = status ? 'block' : 'none'
+            loading.style.display = status ? 'none' : 'flex'
+          }
+        }
+      }, 1000)
     }
 
     window.alerts = {

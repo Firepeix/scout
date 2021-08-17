@@ -66,7 +66,7 @@
 @push('script')
     <script>
       new Vue({
-        el: '#app',
+        el: '#wrap-app',
         data: {
           books: @json($books),
           loading: {
@@ -77,6 +77,7 @@
         },
         mixins: [window.alerts],
         vuetify: new Vuetify(),
+        mounted: () => load(),
         methods: {
           async cleanLogs () {
             try {
