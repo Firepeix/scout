@@ -9,7 +9,6 @@ use Closure;
 use Illuminate\Support\Collection;
 use Psr\Log\LoggerInterface;
 use Scout\Book\Domain\Book;
-use Scout\Book\Domain\BookRepositoryInterface;
 use Scout\Book\Domain\BookServiceInterface;
 use Scout\Book\Domain\ChapterCheckDecision;
 use Scout\Book\Domain\Events\Check\AfterBookCheck;
@@ -26,13 +25,11 @@ class BookService implements BookServiceInterface
 {
     private SourceRepository $sourceRepository;
     private LoggerInterface $logger;
-    private BookRepositoryInterface $repository;
     
-    public function __construct(SourceRepository $sourceRepository, LoggerInterface $logger, BookRepositoryInterface $repository)
+    public function __construct(SourceRepository $sourceRepository, LoggerInterface $logger)
     {
         $this->sourceRepository = $sourceRepository;
         $this->logger           = $logger;
-        $this->repository       = $repository;
     }
     
     public function getFollowedBooks(SourceInterface $source): Collection
@@ -80,7 +77,16 @@ class BookService implements BookServiceInterface
     
     public function postponeBook(Book $book, Carbon $until): void
     {
-        // TODO: Implement postponeBook() method.
+        $book->setIgnoredUntil($until);
     }
     
+    public function read(Book $book, LastChapterRead $readUpTo): void
+    {
+        $book->read($readUpTo);
+    }
+    
+    public function turnOn(Book $book): void
+    {
+        $book->turnOn();
+    }
 }

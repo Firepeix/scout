@@ -5,6 +5,7 @@ namespace Scout\Book\Domain;
 
 
 use Carbon\Carbon;
+use JsonSerializable;
 use Scout\Book\Domain\ValueObject\ExternalId;
 use Scout\Book\Domain\ValueObject\Id;
 use Scout\Book\Domain\ValueObject\LastChapterRead;
@@ -16,7 +17,7 @@ use Scout\Source\Domain\ValueObject\Type;
 use Shared\Domain\ValueObject\Id as SourcedId;
 use Shared\Domain\ValueObject\StringValueObject;
 
-final class Book implements SourcedObject
+final class Book implements SourcedObject, JsonSerializable
 {
     private ?Id             $id;
     private Title           $title;
@@ -25,7 +26,6 @@ final class Book implements SourcedObject
     private SourceType      $sourceType;
     private ?Carbon         $ignoredUntil = null;
     private ?ParentId       $parentId     = null;
-    private ?int            $internalId    = null;
     
     public function __construct(?Id $id, Title $title, LastChapterRead $lastChapterRead, ExternalId $externalId, SourceType $sourceType)
     {
@@ -71,6 +71,11 @@ final class Book implements SourcedObject
         return $this->lastChapterRead;
     }
     
+    public function read(LastChapterRead $readUpto) : void
+    {
+        $this->lastChapterRead = $readUpto;
+    }
+    
     public function toArray(): array
     {
         return [
@@ -100,13 +105,23 @@ final class Book implements SourcedObject
         $this->parentId = $parentId;
     }
     
-    public function getInternalId(): ?int
+    public function getExternalId(): ExternalId
     {
-        return $this->internalId;
+        return $this->externalId;
     }
     
-    public function setInternalId(int $internalId): void
+    public function jsonSerialize() : array
     {
-        $this->internalId = $internalId;
+        return [
+            'id' => $this->getId(),
+            'title' => $this->getTitle(),
+            'lastChapterRead' => $this->getLastChapterRead(),
+            'ignoredUntil' => $this->getIgnoredUntil() !== null ? $this->getIgnoredUntil()->format('d/m/Y') : null,
+        ];
+    }
+    
+    public function turnOn() : void
+    {
+        $this->ignoredUntil = null;
     }
 }

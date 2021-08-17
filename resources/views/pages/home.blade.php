@@ -1,4 +1,3 @@
-@php /** @var \Scout\Book\Domain\Book $book */ @endphp
 @extends('layout.app')
 @section('content')
     <v-card outlined>
@@ -26,43 +25,38 @@
                     </tr>
                     </thead>
                     <tbody>
-                    @foreach($books as $book)
-                        <tr>
-                            <td class="text-center">{{ $book->getId() }}</td>
-                            <td class="text-center">{{ $book->getTitle() }}</td>
-                            <td class="text-center">{{ $book->getLastChapterRead() }}</td>
-                            <td class="text-center">{{ $book->getIgnoredUntil() !== null ? $book->getIgnoredUntil()->format('d/m/Y') : 'Ativo'}}</td>
-                            <td class="text-center">
-                                <v-tooltip top color="black">
-                                    <template #activator="{ on, attrs }">
-                                        <v-btn color="success" icon v-bind="attrs" v-on="on">
-                                            <v-icon>mdi-check</v-icon>
-                                        </v-btn>
-                                    </template>
-                                    <span>Marcar como lido!</span>
-                                </v-tooltip>
-                                @if($book->getIgnoredUntil() !== null)
-                                    <v-tooltip top color="black">
-                                        <template #activator="{ on, attrs }">
-                                            <v-btn color="purple" icon v-bind="attrs" v-on="on">
-                                                <v-icon>mdi-play</v-icon>
-                                            </v-btn>
-                                        </template>
-                                        <span>Ativar!</span>
-                                    </v-tooltip>
-                                @else
-                                    <v-tooltip top color="black">
-                                        <template #activator="{ on, attrs }">
-                                            <v-btn @click="postpone({{$book->getId()}})" :loading="loading.postpone" :disabled="loading.postpone" color="primary" icon v-bind="attrs" v-on="on">
-                                                <v-icon>mdi-calendar-plus</v-icon>
-                                            </v-btn>
-                                        </template>
-                                        <span>Adiar para depois!</span>
-                                    </v-tooltip>
-                                @endif
-                            </td>
-                        </tr>
-                    @endforeach
+                    <tr v-for="book in books" :key="`book-${book.id}`">
+                        <td class="text-center">@{{ book.id }}</td>
+                        <td class="text-center">@{{ book.title }}</td>
+                        <td class="text-center">@{{ book.lastChapterRead }}</td>
+                        <td class="text-center">@{{ book.ignoredUntil !== null ? book.ignoredUntil : 'Ativo'}}</td>
+                        <td class="text-center">
+                            <v-tooltip top color="black">
+                                <template #activator="{ on, attrs }">
+                                    <v-btn @click="read(book.id)" :loading="loading.markAsRead" :disabled="loading.markAsRead" color="success" icon v-bind="attrs" v-on="on">
+                                        <v-icon>mdi-check</v-icon>
+                                    </v-btn>
+                                </template>
+                                <span>Marcar como lido!</span>
+                            </v-tooltip>
+                            <v-tooltip top color="black" v-if="book.ignoredUntil !== null">
+                                <template #activator="{ on, attrs }">
+                                    <v-btn @click="turnOn(book.id)" color="purple" :loading="loading.postpone" :disabled="loading.postpone" icon v-bind="attrs" v-on="on">
+                                        <v-icon>mdi-play</v-icon>
+                                    </v-btn>
+                                </template>
+                                <span>Ativar!</span>
+                            </v-tooltip>
+                            <v-tooltip top color="black" v-else="book.ignoredUntil === null">
+                                <template #activator="{ on, attrs }">
+                                    <v-btn @click="postpone(book.id)" :loading="loading.postpone" :disabled="loading.postpone" color="primary" icon v-bind="attrs" v-on="on">
+                                        <v-icon>mdi-calendar-plus</v-icon>
+                                    </v-btn>
+                                </template>
+                                <span>Adiar para depois!</span>
+                            </v-tooltip>
+                        </td>
+                    </tr>
                     </tbody>
                 </template>
             </v-simple-table>
@@ -74,6 +68,7 @@
       new Vue({
         el: '#app',
         data: {
+          books: @json($books),
           loading: {
             cleanLogs: false,
             postpone: false,
@@ -105,6 +100,7 @@
               this.loading.postpone = false;
               if (response.data.success) {
                 this.displaySuccess('Capitulo Adiado!');
+                this.postponeRow(id);
                 return;
               }
               this.displayError();
@@ -112,6 +108,68 @@
               this.loading.postpone = false;
               this.displayError(error.message);
             }
+          },
+          postponeRow (id) {
+            const books = this.books;
+            const bookIndex = books.findIndex(book => book.id === id)
+            if (bookIndex !== -1) {
+              books[bookIndex].ignoredUntil = moment().add(1, 'y').format('DD/MM/YYYY')
+              this.books = books;
+            }
+          },
+          async turnOn (id) {
+            try {
+              this.loading.postpone = true;
+              const response = await axios.put(`${window.ENV.URL}/books/${id}/turn-on`);
+              this.loading.postpone = false;
+              if (response.data.success) {
+                this.displaySuccess('Vigia de capitulo iniciado!');
+                this.turnOnRow(id);
+                return;
+              }
+              this.displayError();
+            } catch (error) {
+              this.loading.postpone = false;
+              this.displayError(error.message);
+            }
+          },
+          turnOnRow (id) {
+            const books = this.books;
+            const bookIndex = books.findIndex(book => book.id === id)
+            if (bookIndex !== -1) {
+              books[bookIndex].ignoredUntil = null
+              this.books = books;
+            }
+          },
+          async read (id) {
+            try {
+              this.loading.markAsRead = true;
+              const response = await axios.put(`${window.ENV.URL}/books/${id}/read`);
+              this.loading.markAsRead = false;
+              if (response.data.success) {
+                this.displaySuccess('Capitulo Lido!');
+                this.readRow(id);
+                return;
+              }
+              this.displayError();
+            } catch (error) {
+              this.loading.markAsRead = false;
+              this.displayError(error.message);
+            }
+          },
+          readRow (id) {
+            const books = this.books;
+            const bookIndex = books.findIndex(book => book.id === id)
+            if (bookIndex !== -1) {
+              books[bookIndex].lastChapterRead = this.guessTheAmountToRead(String(books[bookIndex].lastChapterRead))
+              this.books = books;
+            }
+          },
+          guessTheAmountToRead (amount) {
+            const decimals = amount.split('.');
+            const digits = Number(String(decimals[1] !== undefined ? decimals[1] : '').length) + 1;
+            const digit = Number(String('1').padEnd(digits, '0'));
+            return String(((amount * digit) + 1) / digit);
           }
         }
       });

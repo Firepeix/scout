@@ -1,6 +1,6 @@
 <?php
 
-namespace Scout\Book\Application\Postpone;
+namespace Scout\Book\Application\Read;
 
 use Scout\Book\Domain\BookRepositoryInterface;
 use Scout\Book\Domain\BookServiceInterface;
@@ -8,7 +8,7 @@ use Shared\Domain\Bus\CommandHandlerInterface;
 use Shared\Domain\Bus\CommandInterface;
 use Shared\Domain\Bus\CommandResponseInterface;
 
-class PostponeBookCommandHandler implements CommandHandlerInterface
+class ReadBookCommandHandler implements CommandHandlerInterface
 {
     private BookServiceInterface $service;
     private BookRepositoryInterface $repository;
@@ -20,12 +20,13 @@ class PostponeBookCommandHandler implements CommandHandlerInterface
     }
     
     /**
-     * @param PostponeBookCommand $command
+     * @param ReadBookCommand $command
      */
     public function handle(CommandInterface $command): ? CommandResponseInterface
     {
         $book = $this->repository->find($command->getId());
-        $this->service->postponeBook($book, $command->until());
+        $readUpto = $command->getReadUpto() ?? $book->getLastChapterRead()->read();
+        $this->service->read($book, $readUpto);
         $this->repository->updateBook($book);
         return null;
     }
