@@ -52,4 +52,13 @@ services:
         MB_DB_HOST: "${DB_GRAIL_HOST}"
       ports:
         - 3000:3000
+    webserver:
+      image: nginx:alpine
+      container_name: ScoutServer
+      working_dir: /application
+      volumes:
+        - .:/application
+        - ./docker/nginx/nginx.conf:/etc/nginx/conf.d/default.conf
+      ports:
+        - "9201:80"
 
