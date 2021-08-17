@@ -6,6 +6,7 @@ namespace Scout\Book\Domain\Services;
 
 use Carbon\Carbon;
 use Closure;
+use Exception;
 use Illuminate\Support\Collection;
 use Psr\Log\LoggerInterface;
 use Scout\Book\Domain\Book;
@@ -13,6 +14,7 @@ use Scout\Book\Domain\BookServiceInterface;
 use Scout\Book\Domain\ChapterCheckDecision;
 use Scout\Book\Domain\Events\Check\AfterBookCheck;
 use Scout\Book\Domain\Events\Check\CheckBook;
+use Scout\Book\Domain\Exceptions\CheckBookException;
 use Scout\Book\Domain\ValueObject\ExternalId;
 use Scout\Book\Domain\ValueObject\LastChapterRead;
 use Scout\Book\Domain\ValueObject\SourceType;
@@ -61,10 +63,14 @@ class BookService implements BookServiceInterface
     
     public function checkChapter(Book $book, SourceInterface $source): ChapterCheckDecision
     {
-        $lastChapter = $source->getLastUpdate($book);
-        $decision = new ChapterCheckDecision($lastChapter, $book->getLastChapterRead());
-        $this->logger->info('Manga Checado', ['Manga' => $book->toArray(), 'Source' => $source->toArray(), 'Decision' => $decision->toArray(), 'Event' => CheckBook::NAME]);
-        return $decision;
+        try {
+            $lastChapter = $source->getLastUpdate($book);
+            $decision = new ChapterCheckDecision($lastChapter, $book->getLastChapterRead());
+            $this->logger->info('Manga Checado', ['Manga' => $book->toArray(), 'Source' => $source->toArray(), 'Decision' => $decision->toArray(), 'Event' => CheckBook::NAME]);
+            return $decision;
+        } catch (Exception $exception) {
+            throw new CheckBookException($book, $exception);
+        }
     }
     
     public function checkBooksAsync(Collection $books): void

@@ -13,7 +13,6 @@ use Lancelot\Pulse\Domain\ValueObject\Query;
 use Lancelot\Pulse\Domain\ValueObject\Report;
 use Lancelot\Pulse\Domain\ValueObject\Reports;
 use Lancelot\Pulse\Domain\ValueObject\SkipEmpty;
-use Lancelot\Pulse\Domain\ValueObject\StopOnAny;
 use Lancelot\Pulse\Infrastructure\Persistence\Models\PulseModel;
 use Lancelot\Pulse\Infrastructure\Persistence\Models\ReportModel;
 
@@ -36,13 +35,18 @@ class PulseMetabaseRepository implements PulseRepositoryInterface
     
     private function map(PulseModel $model) : Pulse
     {
-        return new Pulse(
+        $pulse = new Pulse(
             new Name($model->name),
             new SkipEmpty($model->skip_if_empty),
             new AlertCondition($model->alert_condition),
-            new StopOnAny($model->alert_first_only),
             new Reports($this->reportMaps($model->reports)),
         );
+        
+        if ($model->alert_above_goal === true) {
+            $pulse->alertsAboveGoal();
+        }
+        
+        return $pulse;
     }
     
     private function reportMaps(Collection $reports) : Collection
@@ -56,6 +60,7 @@ class PulseMetabaseRepository implements PulseRepositoryInterface
     private function reportMap(ReportModel $model, Context $context) : Report
     {
         $query = json_decode($model->dataset_query, true);
-        return new Report(new Query($query, $context));
+        $settings = json_decode($model->visualization_settings, true);
+        return new Report(new Query($query, $context), $settings['graph.goal_value'] ?? null);
     }
 }

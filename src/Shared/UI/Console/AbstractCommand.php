@@ -3,8 +3,8 @@
 
 namespace Shared\UI\Console;
 
-use Illuminate\Bus\Dispatcher;
 use Illuminate\Console\Command;
+use Illuminate\Contracts\Bus\Dispatcher;
 
 abstract class AbstractCommand extends Command
 {

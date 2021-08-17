@@ -3,55 +3,71 @@
 namespace Lancelot\Pulse\Domain;
 
 use Illuminate\Support\Collection;
+use Lancelot\Pulse\Domain\ValueObject\AlertAboveGoal;
 use Lancelot\Pulse\Domain\ValueObject\AlertCondition;
 use Lancelot\Pulse\Domain\ValueObject\Name;
+use Lancelot\Pulse\Domain\ValueObject\Report;
 use Lancelot\Pulse\Domain\ValueObject\Reports;
 use Lancelot\Pulse\Domain\ValueObject\SkipEmpty;
-use Lancelot\Pulse\Domain\ValueObject\StopOnAny;
 
 class Pulse
 {
     private const ROWS_CONDITION = 'rows';
+    private const GOAL_CONDITION = 'goal';
     
     private Name           $name;
     private SkipEmpty      $skipEmpty;
     private AlertCondition $alertCondition;
-    private StopOnAny      $alertFirstOnly;
     private Reports        $reports;
+    private AlertAboveGoal $alertAboveGoal;
     
-    public function __construct(Name $name, SkipEmpty $skipEmpty, AlertCondition $alertCondition, StopOnAny $alertFirstOnly, Reports $reports)
+    public function __construct(Name $name, SkipEmpty $skipEmpty, AlertCondition $alertCondition, Reports $reports)
     {
         $this->name           = $name;
         $this->skipEmpty      = $skipEmpty;
         $this->alertCondition = $alertCondition;
-        $this->alertFirstOnly = $alertFirstOnly;
         $this->reports        = $reports;
+        $this->alertAboveGoal = new AlertAboveGoal();
+    }
+    
+    public function alertsAboveGoal() : void
+    {
+        $this->alertAboveGoal = new AlertAboveGoal(true);
     }
     
     
     public function shouldFire(): bool
     {
-        foreach ($this->reports as $report) {
-            $check = $this->check($report->retrieve());
-            if ($check) {
-                if (self::ROWS_CONDITION === $this->alertCondition->value()) {
-                    return true;
+        $conditions = [
+            self::ROWS_CONDITION => fn (Collection $rows, Report $report) => $this->checkRowsCondition($rows),
+            self::GOAL_CONDITION => fn (Collection $rows, Report $report) => $this->checkGoalCondition($rows, $report)
+        ];
+        
+        if (isset($conditions[$this->alertCondition->value()])) {
+            foreach ($this->reports as $report) {
+                $rows = $report->retrieve();
+                if ($this->skipEmpty->value() && $rows->isEmpty()) {
+                    return false;
                 }
-                continue;
+    
+                return $conditions[$this->alertCondition->value()]($rows, $report);
             }
-            
-            if (self::ROWS_CONDITION === $this->alertCondition->value()) {
-                return false;
-            }
-            
         }
         
-        return true;
+    
+        return false;
     }
     
-    private function check(Collection $rows) : bool
+    private function checkRowsCondition(Collection $rows) : bool
     {
         return $rows->isNotEmpty();
+    }
+    
+    private function checkGoalCondition(Collection $rows, Report $report) : bool
+    {
+        $goal = $report->getGoal();
+        $current = $rows->count();
+        return $this->alertAboveGoal->value() ? $current >= $goal : $current <= $goal;
     }
     
     public function getName(): string
