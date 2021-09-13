@@ -12,7 +12,7 @@ class Chapter
     
     public function __construct(array $content)
     {
-        $this->number = $content['data']['attributes']['chapter'];
+        $this->number = $content['attributes']['chapter'];
     }
     
     public function getNumber() : string

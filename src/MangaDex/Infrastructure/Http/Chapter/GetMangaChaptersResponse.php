@@ -14,14 +14,14 @@ class GetMangaChaptersResponse
     public function __construct(array $content)
     {
         $this->chapters = new Collection();
-        $this->createChapters($content['results']);
+        $this->createChapters($content['data']);
     }
     
     private function createChapters(array $chapters) : void
     {
         $this->chapters = new Collection();
         foreach ($chapters as $chapter) {
-            if ($chapter['data']['type'] === Chapter::TYPE) {
+            if ($chapter['type'] === Chapter::TYPE) {
                 $this->chapters->push(new Chapter($chapter));
             }
         }
