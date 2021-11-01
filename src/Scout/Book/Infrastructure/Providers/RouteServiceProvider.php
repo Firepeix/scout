@@ -2,23 +2,18 @@
 
 namespace Scout\Book\Infrastructure\Providers;
 
-use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
-use Illuminate\Support\Collection;
-use Scout\Book\UI\Api\Routes\BookRoutes;
-use Scout\Book\UI\Api\Routes\DashboardRoutes;
-use Shared\UI\App\AbstractRoute;
+use Scout\Book\UI\Api\Book\PostponeBookAction;
+use Scout\Book\UI\Api\Book\ReadBookAction;
+use Scout\Book\UI\Api\Book\TurnOnBookAction;
+use Scout\Book\UI\Api\Dashboard\GetBooksDashboard;
+use Shared\Infrastructure\Providers\RouteServiceProvider as BaseRouteProvider;
 
-class RouteServiceProvider extends ServiceProvider
+class RouteServiceProvider extends BaseRouteProvider
 {
-    public const HOME = '/';
-    
-    public function register() : void
-    {
-        $routes = new Collection([
-            new DashboardRoutes(),
-            new BookRoutes()
-        ]);
-        
-        $routes->each(fn (AbstractRoute $route) => $route->register());
-    }
+    protected array $actions = [
+        GetBooksDashboard::class,
+        PostponeBookAction::class,
+        TurnOnBookAction::class,
+        ReadBookAction::class
+    ];
 }
