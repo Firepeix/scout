@@ -33,6 +33,7 @@
             "Shared\\": "src/Shared/",
             "Scout\\": "src/Scout/",
             "Lancelot\\": "src/Lancelot/",
+            "Executor\\": "src/Executor/",
             "Notification\\": "src/Notification/",
             "Database\\Factories\\": "database/factories/",
             "Database\\Seeders\\": "database/seeders/"

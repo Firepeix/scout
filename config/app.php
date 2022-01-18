@@ -52,7 +52,8 @@ return [
         Lancelot\Pulse\Infrastructure\Providers\ModuleServiceProvider::class,
         Lancelot\Context\Infrastructure\Providers\ModuleServiceProvider::class,
         Notification\Infrastructure\Providers\ModuleServiceProvider::class,
-        Shared\Infrastructure\Providers\ModuleServiceProvider::class
+        Shared\Infrastructure\Providers\ModuleServiceProvider::class,
+        Executor\Manager\Infrastructure\Providers\ModuleServiceProvider::class
     ],
     'aliases' => [
 
