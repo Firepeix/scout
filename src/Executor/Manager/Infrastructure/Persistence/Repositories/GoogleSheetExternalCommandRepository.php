@@ -3,9 +3,12 @@
 namespace Executor\Manager\Infrastructure\Persistence\Repositories;
 use Executor\Manager\Domain\ExternalCommand;
 use Executor\Manager\Domain\Repositories\ExternalCommandRepositoryInterface;
+use Executor\Manager\Domain\ValueObject\Body;
+use Executor\Manager\Domain\ValueObject\CommandName;
 use Executor\Manager\Infrastructure\Persistence\GoogleSheets\ExternalCommandModel;
 use Illuminate\Support\Collection;
 use Revolution\Google\Sheets\Contracts\Factory;
+use Shared\Domain\ValueObject\Id;
 
 class GoogleSheetExternalCommandRepository implements ExternalCommandRepositoryInterface
 {
@@ -48,23 +51,18 @@ class GoogleSheetExternalCommandRepository implements ExternalCommandRepositoryI
     
     private function createCommand(ExternalCommandModel $model) : ExternalCommand
     {
-        $command = new Book(
-            new BookId($model->getId()),
-            new Title($model->getTitle()),
-            new LastChapterRead($model->getLastReadChapter()),
-            new ExternalId($model->getExternalId()),
-            new SourceType($model->getSourceType())
+        $command = new ExternalCommand(
+            id: new Id($model->getId()),
+            commandName: new CommandName($model->getCommandName()),
+            body: new Body($model->getBody()),
+            createdAt: $model->getCreatedAt()
         );
-    
-        if ($model->getIgnoreUntil() !== null) {
-            $book->setIgnoredUntil($model->getIgnoreUntil());
+        
+        if ($model->hasCompleted()) {
+            $command->complete($model->getResponseCode()->unwrap(), $model->getResponseBody()->unwrap());
         }
-    
-        if ($model->getParentId() !== null) {
-            $book->setParentId(new ParentId($model->getParentId()));
-        }
-    
-        return $book;
+        
+        return $command;
     }
     //
     //private function createModel(Book $book) : BookModel

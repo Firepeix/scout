@@ -3,15 +3,25 @@
 namespace Shared\Domain\Util\Option;
 
 use Exception;
+use JetBrains\PhpStorm\Pure;
+use Shared\Domain\Util\Result\Err;
 use Shared\Domain\Util\Result\Result;
 
+/**
+ * No value
+ *
+ * @template T
+ * The optional value
+ *
+ * @inherits Option<T>
+ */
 class None extends Option
 {
     /**
      * @var array
      * @psalm-var list<mixed>
      */
-    private $pass;
+    private array $pass;
     
     /**
      * None constructor
@@ -71,8 +81,8 @@ class None extends Option
     /**
      * Unwraps a result, yielding the content of a Some. Else, it returns optb.
      *
-     * @param mixed<T> $optb
-     * @return mixed
+     * @param T $optb
+     * @return T
      */
     public function unwrapOr($optb)
     {
@@ -84,10 +94,10 @@ class None extends Option
      *
      * @param callable $op
      * @psalm-param callable(mixed...):T $op
-     * @return mixed
+     * @return T
      * @psalm-return T
      */
-    public function unwrapOrElse(callable $op)
+    public function unwrapOrElse(callable $op): mixed
     {
         return $op(...$this->pass);
     }
@@ -116,10 +126,10 @@ class None extends Option
      * @psalm-param U $default
      * @param callable $mapper
      * @psalm-param callable(T=,mixed...):U $mapper
-     * @return mixed
+     * @return T
      * @psalm-return U
      */
-    public function mapOr($default, callable $mapper)
+    public function mapOr($default, callable $mapper): mixed
     {
         return $default;
     }
@@ -136,7 +146,8 @@ class None extends Option
      * @return mixed
      * @psalm-return U
      */
-    public function mapOrElse(callable $default, callable $mapper)
+    #[Pure]
+    public function mapOrElse(callable $default, callable $mapper): mixed
     {
         return $default(...$this->pass);
     }
@@ -163,6 +174,7 @@ class None extends Option
      * @return Option
      * @psalm-return Option<U>
      */
+    #[Pure]
     public function and(Option $optb): Option
     {
         return new self(...$this->pass);
@@ -231,6 +243,7 @@ class None extends Option
      * @return Result
      * @psalm-return Result<T, E>
      */
+    #[Pure]
     public function okOr($err): Result
     {
         return new Err($err, ...$this->pass);

@@ -22,7 +22,7 @@ use Shared\Domain\Util\Option\Some;
 class Err extends Result
 {
     /**
-     * @var mixed
+     * @var E
      * @psalm-var E
      */
     private mixed $err;
@@ -73,7 +73,7 @@ class Err extends Result
      *
      * @param callable $mapper
      * @psalm-param callable(T=,mixed...):U $mapper
-     * @return Result
+     * @return Result<U,E>
      * @psalm-return Result<U,E>
      */
     public function map(callable $mapper): Result
@@ -88,7 +88,7 @@ class Err extends Result
      *
      * @param callable $mapper
      * @psalm-param callable(E=,mixed...):F $mapper
-     * @return Result
+     * @return Result<T,F>
      * @psalm-return Result<T,F>
      */
     public function mapErr(callable $mapper): Result
@@ -113,9 +113,9 @@ class Err extends Result
      *
      * @template U
      *
-     * @param Result $res
+     * @param Result<U,E> $res
      * @psalm-param Result<U,E> $res
-     * @return Result
+     * @return Result<U,E>
      * @psalm-return Result<U,E>
      */
     #[Pure]

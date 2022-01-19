@@ -3,6 +3,7 @@
 namespace Shared\Domain\Util\Option;
 
 use Exception;
+use Shared\Domain\Util\Result\Result;
 
 /**
  * Describes an optional value
@@ -42,7 +43,7 @@ abstract class Option
     /**
      * Unwraps an option, yielding the content of a Some.
      *
-     * @return mixed
+     * @return T
      * @psalm-return T
      * @throws OptionException if the value is a None.
      */
@@ -51,10 +52,8 @@ abstract class Option
     /**
      * Unwraps a result, yielding the content of a Some. Else, it returns optb.
      *
-     * @param mixed $optb
-     * @psalm-param T $optb
-     * @return mixed
-     * @psalm-return T
+     * @param T $optb
+     * @return T
      */
     abstract public function unwrapOr($optb);
     

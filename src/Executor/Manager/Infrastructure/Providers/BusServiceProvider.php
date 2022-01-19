@@ -4,21 +4,11 @@ namespace Executor\Manager\Infrastructure\Providers;
 
 use Executor\Manager\Application\Execute\ExecuteCommand;
 use Executor\Manager\Application\Execute\ExecuteCommandHandler;
-use Illuminate\Support\Facades\Bus;
-use Illuminate\Support\ServiceProvider;
+use Shared\Infrastructure\Providers\AbstractBusServiceProvider;
 
-class BusServiceProvider extends ServiceProvider
+class BusServiceProvider extends AbstractBusServiceProvider
 {
-    public function boot() : void
-    {
-        $this->registerHandlers();
-    }
-    
-    private function registerHandlers()
-    {
-        $commands = [
-            ExecuteCommand::class => ExecuteCommandHandler::class
-        ];
-        Bus::map($commands);
-    }
+    protected array $commands = [
+        ExecuteCommand::class => ExecuteCommandHandler::class
+    ];
 }
