@@ -26,6 +26,7 @@ class ExecuteCommandHandler  implements CommandHandlerInterface
         $commands->each(function (ExternalCommand $command) {
             //TODO adicionar async
             $this->service->execute($command);
+            $this->repository->update($command);
         });
         
         return null;

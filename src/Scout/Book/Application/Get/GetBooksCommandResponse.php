@@ -5,6 +5,7 @@ namespace Scout\Book\Application\Get;
 
 
 use Illuminate\Support\Collection;
+use JetBrains\PhpStorm\Pure;
 use Scout\Book\Domain\Book;
 use Shared\Domain\Bus\CommandResponseInterface;
 
@@ -21,10 +22,19 @@ class GetBooksCommandResponse implements CommandResponseInterface
     }
     
     /**
-     * @return Collection<Book>
+     * @return array<Book>
      */
     public function getBooks(): Collection
     {
         return $this->books;
+    }
+    
+    /**
+     * @return array<Book>
+     */
+    #[Pure]
+    public function getData(): array
+    {
+        return $this->getBooks()->toArray();
     }
 }

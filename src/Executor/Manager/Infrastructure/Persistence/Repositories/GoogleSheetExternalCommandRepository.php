@@ -5,6 +5,7 @@ use Executor\Manager\Domain\ExternalCommand;
 use Executor\Manager\Domain\Repositories\ExternalCommandRepositoryInterface;
 use Executor\Manager\Domain\ValueObject\Body;
 use Executor\Manager\Domain\ValueObject\CommandName;
+use Executor\Manager\Domain\ValueObject\ResponseCode;
 use Executor\Manager\Infrastructure\Persistence\GoogleSheets\ExternalCommandModel;
 use Illuminate\Support\Collection;
 use Revolution\Google\Sheets\Contracts\Factory;
@@ -16,7 +17,7 @@ class GoogleSheetExternalCommandRepository implements ExternalCommandRepositoryI
 
     public function __construct(Factory $sheet)
     {
-        $this->sheet = $sheet->spreadsheet(config('google.sheets.operations'))->sheet(config('app.name'));
+        $this->sheet = clone $sheet->spreadsheet(config('google.sheets.operations'))->sheet(config('app.name'));
     }
     
     public function getExternalCommands(): Collection
@@ -27,8 +28,8 @@ class GoogleSheetExternalCommandRepository implements ExternalCommandRepositoryI
     
     public function update(ExternalCommand $command): void
     {
-        //$model = $this->createModel($book);
-        //$this->sheet->range("A{$model->getId()}")->update([$model->toGoogleRow()]);
+        $model = $this->createModel($command);
+        $this->sheet->range("A{$model->getId()}")->update([$model->toSheetRow()]);
     }
     
     public function delete(ExternalCommand $command): void
@@ -64,18 +65,16 @@ class GoogleSheetExternalCommandRepository implements ExternalCommandRepositoryI
         
         return $command;
     }
-    //
-    //private function createModel(Book $book) : BookModel
-    //{
-    //    $model = BookModel::Create($book->getId(), $book->getTitle(), $book->getLastChapterRead(), $book->getExternalId(), $book->getSourceType()->value());
-    //    if ($book->getIgnoredUntil() !== null) {
-    //        $model->setIgnoreUntil($book->getIgnoredUntil());
-    //    }
-    //
-    //    if ($book->getParentId() !== null) {
-    //        $model->setParentId($book->getParentId());
-    //    }
-    //
-    //    return $model;
-    //}
+    
+    private function createModel(ExternalCommand $command) : ExternalCommandModel
+    {
+        return new ExternalCommandModel(
+            id:           $command->getId()->value(),
+            commandName:  $command->getName()->value(),
+            createdAt:    $command->getCreatedAt(),
+            body:         $command->getBody()->string(),
+            responseCode: $command->getResponseCode()->map(fn (ResponseCode $code) => $code->value()),
+            responseBody: $command->getResponseBody()->map(fn (Body $code) => $code->string())
+        );
+    }
 }

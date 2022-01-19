@@ -38,6 +38,39 @@ class ExternalCommand
         $this->createdAt    = $createdAt;
     }
     
+    public function getId(): Id
+    {
+        return $this->id;
+    }
+    
+    /**
+     * @return Body
+     */
+    public function getBody(): Body
+    {
+        return $this->body;
+    }
+    
+    /**
+     * @return Option<ResponseCode>
+     */
+    public function getResponseCode(): Option
+    {
+        return $this->responseCode;
+    }
+    
+    /**
+     * @return Option<Body>
+     */
+    public function getResponseBody(): Option
+    {
+        return $this->responseBody;
+    }
+    
+    public function getCreatedAt(): Carbon
+    {
+        return $this->createdAt;
+    }
     
     public function complete(ResponseCode $code, Body $responseBody): void
     {

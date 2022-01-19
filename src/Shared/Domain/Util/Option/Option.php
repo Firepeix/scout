@@ -117,7 +117,7 @@ abstract class Option
      * @return Result
      * @psalm-return Result<T, E>
      */
-    abstract public function okOr($err): Result;
+    abstract public function okOr(mixed $err): Result;
     
     /**
      * Transforms the Option<T> into a Result<T, E>, mapping Some(v) to Ok(v) and None to Err(err()).

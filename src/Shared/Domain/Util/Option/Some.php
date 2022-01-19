@@ -3,6 +3,8 @@
 namespace Shared\Domain\Util\Option;
 
 use Exception;
+use Shared\Domain\Util\Result\Result;
+
 
 /**
  * Some value
