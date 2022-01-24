@@ -78,9 +78,19 @@ class ExternalCommand
         $this->responseBody = new Some($responseBody);
     }
     
+    public function executing(): void
+    {
+        $this->responseCode = new Some(ResponseCode::executing());
+    }
+    
     public function hasNotBeenCompleted(): bool
     {
-        return $this->responseCode->isNone();
+        return !$this->responseCode->unwrapOr(ResponseCode::blank())->isFinal();
+    }
+    
+    public function isLocked(): bool
+    {
+        return $this->responseCode->unwrapOr(ResponseCode::blank())->isLocked();
     }
     
     public function getName(): CommandName

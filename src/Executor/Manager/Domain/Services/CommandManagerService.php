@@ -27,18 +27,20 @@ class CommandManagerService implements CommandManagerServiceInterface
     
     public function execute(ExternalCommand $command): void
     {
-        if ($command->hasNotBeenCompleted()) {
-            try {
-                $name         = $command->getName()->value();
-                $commandClass = $this->findCommand($name);
-                $executor     = new $commandClass(...$command->getArgs());
-                $payload      = $this->dispatcher->dispatch($executor);
-                $this->completeWithSuccess($command, $payload !== null ? new Some($payload) : new None());
-            } catch (Exception $exception) {
-                $this->completeWithError($command, $exception->getMessage());
-            }
-            return;
+        try {
+            $name         = $command->getName()->value();
+            $commandClass = $this->findCommand($name);
+            $executor     = new $commandClass(...$command->getArgs());
+            $payload      = $this->dispatcher->dispatch($executor);
+            $this->completeWithSuccess($command, $payload !== null ? new Some($payload) : new None());
+        } catch (Exception $exception) {
+            $this->completeWithError($command, $exception->getMessage());
         }
+    }
+    
+    public function take(ExternalCommand $command): void
+    {
+        $command->executing();
     }
     
     private function completeWithSuccess(ExternalCommand $command, Option $response): void

@@ -7,4 +7,5 @@ use Executor\Manager\Domain\ExternalCommand;
 interface CommandManagerServiceInterface
 {
     public function execute(ExternalCommand $command): void;
+    public function take(ExternalCommand $command): void;
 }

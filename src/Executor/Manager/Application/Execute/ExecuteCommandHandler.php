@@ -2,14 +2,16 @@
 
 namespace Executor\Manager\Application\Execute;
 
-use Executor\Manager\Domain\ExternalCommand;
 use Executor\Manager\Domain\Repositories\ExternalCommandRepositoryInterface;
 use Executor\Manager\Domain\Services\CommandManagerServiceInterface;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Shared\Domain\Bus\CommandHandlerInterface;
 use Shared\Domain\Bus\CommandInterface;
 use Shared\Domain\Bus\CommandResponseInterface;
+use Shared\Infrastructure\Events\Subscribe;
 
-class ExecuteCommandHandler  implements CommandHandlerInterface
+#[Subscribe(event: ExecuteCommand::EXECUTE_COMMAND_EVENT)]
+class ExecuteCommandHandler implements CommandHandlerInterface, ShouldQueue
 {
     private ExternalCommandRepositoryInterface $repository;
     private CommandManagerServiceInterface $service;
@@ -22,13 +24,11 @@ class ExecuteCommandHandler  implements CommandHandlerInterface
     
     public function handle(ExecuteCommand|CommandInterface $command): ? CommandResponseInterface
     {
-        $commands = $this->repository->getExternalCommands();
-        $commands->each(function (ExternalCommand $command) {
-            //TODO adicionar async
-            $this->service->execute($command);
-            $this->repository->update($command);
-        });
-        
+        $externalCommand = $command->getExternalCommand();
+        if ($externalCommand->hasNotBeenCompleted()) {
+            $this->service->execute($externalCommand);
+            $this->repository->update($externalCommand);
+        }
         return null;
     }
 }

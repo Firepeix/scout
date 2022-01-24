@@ -59,8 +59,8 @@ class GoogleSheetExternalCommandRepository implements ExternalCommandRepositoryI
             createdAt: $model->getCreatedAt()
         );
         
-        if ($model->hasCompleted()) {
-            $command->complete($model->getResponseCode()->unwrap(), $model->getResponseBody()->unwrap());
+        if ($model->hasCompleted() && $model) {
+            $command->complete(ResponseCode::define($model->getResponseCode()->unwrap()), new Body($model->getResponseBody()->unwrapOr("")));
         }
         
         return $command;
