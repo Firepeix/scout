@@ -5,7 +5,9 @@ namespace Scout\Book\Application\Read;
 use Scout\Book\Domain\ValueObject\Id;
 use Scout\Book\Domain\ValueObject\LastChapterRead;
 use Shared\Domain\Bus\CommandInterface;
+use Shared\Infrastructure\Application\ApplicationCommand;
 
+#[ApplicationCommand(name: "READ_BOOK")]
 class ReadBookCommand implements CommandInterface
 {
     private int $id;

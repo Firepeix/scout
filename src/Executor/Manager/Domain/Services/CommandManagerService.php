@@ -43,7 +43,8 @@ class CommandManagerService implements CommandManagerServiceInterface
     
     private function completeWithSuccess(ExternalCommand $command, Option $response): void
     {
-        $command->complete(ResponseCode::success(), Body::success($response->unwrapOr([])->getData()));
+        $response = $response->isNone() ? [] : $response->unwrap()->getData();
+        $command->complete(ResponseCode::success(), Body::success($response));
     }
     
     private function completeWithError(ExternalCommand $command, string $error): void

@@ -31,7 +31,7 @@ class Body
     
     public function array(): array
     {
-        return json_decode($this->rawBody, true);
+        return json_decode($this->rawBody, true) ?? [];
     }
     
     public function string(): string
