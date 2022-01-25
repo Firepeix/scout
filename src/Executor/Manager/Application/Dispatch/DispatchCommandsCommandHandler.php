@@ -32,7 +32,7 @@ class DispatchCommandsCommandHandler  implements CommandHandlerInterface
                 $commands = $this->repository->getExternalCommands();
                 $commands->each(function (ExternalCommand $command) {
                     if (!$command->isLocked()) {
-                        if ($command->hasNotBeenCompleted()) {
+                        if ($command->shouldLock()) {
                             $this->service->take($command);
                             $this->repository->update($command);
                         }
@@ -43,7 +43,7 @@ class DispatchCommandsCommandHandler  implements CommandHandlerInterface
             } catch (Exception $exception) {
                 $this->logger->error("Error no loop de comando", ['exception' => $exception]);
             }
-            sleep(1);
+            sleep(2);
         }
     }
 }

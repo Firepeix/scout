@@ -108,4 +108,15 @@ class ExternalCommandModel
             self::CREATED_AT_FIELD    => $this->createdAt->toDateTimeString()
         ];
     }
+    
+    public static function emptySheetRow(): array
+    {
+        return [
+            self::NAME_FIELD          => '',
+            self::BODY_FIELD          => '',
+            self::RESPONSE_CODE_FIELD => '',
+            self::RESPONSE_BODY_FIELD => '',
+            self::CREATED_AT_FIELD    => ''
+        ];
+    }
 }

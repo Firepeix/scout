@@ -28,7 +28,13 @@ class ExecuteCommandHandler implements CommandHandlerInterface, ShouldQueue
         if ($externalCommand->hasNotBeenCompleted()) {
             $this->service->execute($externalCommand);
             $this->repository->update($externalCommand);
+            return null;
         }
+        
+        if ($this->service->shouldClean($externalCommand)) {
+            $this->repository->delete($externalCommand);
+        }
+        
         return null;
     }
 }

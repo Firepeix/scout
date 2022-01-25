@@ -60,8 +60,8 @@ class CommandManagerService implements CommandManagerServiceInterface
             ->expect(new ApplicationCommandNotFoundError($name));
     }
     
-    private function cleanCommand(ExternalCommand $command): void
+    public function shouldClean(ExternalCommand $command): bool
     {
-        #TODO adicionar logica de limpar comando
+        return $command->hasCompleted() && $command->getCreatedAt()->addMinutes(5)->isPast();
     }
 }

@@ -85,7 +85,17 @@ class ExternalCommand
     
     public function hasNotBeenCompleted(): bool
     {
-        return !$this->responseCode->unwrapOr(ResponseCode::blank())->isFinal();
+        return !$this->hasCompleted();
+    }
+    
+    public function hasCompleted(): bool
+    {
+        return $this->responseCode->unwrapOr(ResponseCode::blank())->isFinal();
+    }
+    
+    public function shouldLock(): bool
+    {
+        return $this->hasNotBeenCompleted();
     }
     
     public function isLocked(): bool

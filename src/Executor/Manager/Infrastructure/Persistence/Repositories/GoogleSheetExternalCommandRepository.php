@@ -34,7 +34,7 @@ class GoogleSheetExternalCommandRepository implements ExternalCommandRepositoryI
     
     public function delete(ExternalCommand $command): void
     {
-        // TODO: Implement delete() method.
+        $this->sheet->range("A{$command->getId()->value()}")->update([ExternalCommandModel::emptySheetRow()]);
     }
     
     
