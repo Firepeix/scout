@@ -4,6 +4,7 @@
 namespace Lancelot\Log\Application\Create;
 
 
+use Exception;
 use Lancelot\Log\Domain\LogRepositoryInterface;
 use Lancelot\Log\Domain\LogServiceInterface;
 use Shared\Domain\Bus\CommandHandlerInterface;
@@ -23,7 +24,13 @@ class CreateLogCommandHandler  implements CommandHandlerInterface
     
     public function handle(CreateLogCommand|CommandInterface $command): ? CommandResponseInterface
     {
-        $this->repository->insert($command->getLog());
+        $log = $this->service->format($command->getLog());
+        $this->repository->insert($log);
+        try {
+            $this->service->sendToNewRelic($log);
+        } catch (Exception) {
+        
+        }
         return null;
     }
 }

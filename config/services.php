@@ -34,4 +34,8 @@ return [
         'client_secret' => env('GOOGLE_CLIENT_SECRET'),
         'redirect'      => 'auth/token',
     ],
+    'new-relic' => [
+        'domain' => env('NEW_RELIC_DOMAIN'),
+        'key' => env('NEW_RELIC_KEY')
+    ]
 ];
