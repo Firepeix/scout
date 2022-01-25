@@ -5,7 +5,9 @@ namespace Scout\Book\Application\Get;
 use Scout\Book\Domain\ValueObject\Id;
 use Scout\Book\Domain\ValueObject\Title;
 use Shared\Domain\Bus\CommandInterface;
+use Shared\Infrastructure\Application\ApplicationCommand;
 
+#[ApplicationCommand(name: "GET_BOOKS")]
 class GetBooksCommand implements CommandInterface
 {
     private ? Id $id;

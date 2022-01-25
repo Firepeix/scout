@@ -19,9 +19,15 @@ if [ $APP_ENV != 'local' ]; then
     sed -i 's/^newrelic.distributed_tracing_enabled.*/newrelic.distributed_tracing_enabled=true/' $NEW_RELIC_INI ||
     echo 'newrelic.distributed_tracing_enabled=true' >> $NEW_RELIC_INI
   cd /application && php artisan migrate --seed --force && php artisan log:clean
+
   if [ ! -d "/application/app/Infrastructure/Supervisor/services/scheduler-worker.conf" ]; then
     cp /application/app/Infrastructure/Supervisor/scheduler-worker.conf /application/app/Infrastructure/Supervisor/services/scheduler-worker.conf
   fi
+
+  if [ ! -d "/application/app/Infrastructure/Supervisor/services/commands-worker.conf" ]; then
+      cp /application/workers/commands-worker.conf /application/app/Infrastructure/Supervisor/services/commands-worker.conf
+  fi
+
   exec supervisord -c /application/app/Infrastructure/Supervisor/supervisord.conf
 else
   exec supervisord -c /application/app/Infrastructure/Supervisor/supervisord.conf

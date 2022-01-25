@@ -70,4 +70,7 @@ return [
     |
     */
     'config' => [],
+    'sheets' => [
+        'operations' => env('OPERATIONS_SHEET_ID', '')
+    ]
 ];

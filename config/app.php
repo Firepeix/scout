@@ -17,7 +17,7 @@ return [
     'key' => env('APP_KEY'),
     'cipher' => 'AES-256-CBC',
     'providers' => [
-        
+        Executor\Manager\Infrastructure\Providers\ModuleServiceProvider::class,
         Illuminate\Auth\AuthServiceProvider::class,
         Illuminate\Broadcasting\BroadcastServiceProvider::class,
         Shared\Infrastructure\BusServiceProvider::class,

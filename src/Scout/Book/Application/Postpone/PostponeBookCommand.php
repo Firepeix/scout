@@ -5,7 +5,9 @@ namespace Scout\Book\Application\Postpone;
 use Carbon\Carbon;
 use Scout\Book\Domain\ValueObject\Id;
 use Shared\Domain\Bus\CommandInterface;
+use Shared\Infrastructure\Application\ApplicationCommand;
 
+#[ApplicationCommand(name: "POSTPONE_BOOK")]
 class PostponeBookCommand implements CommandInterface
 {
     private int $id;
