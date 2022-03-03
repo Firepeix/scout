@@ -26,7 +26,7 @@ class Body
     
     public static function success(array $data = []): self
     {
-        return new self(json_encode(['success' => true, ...$data]));
+        return new self(json_encode(['success' => true, "data" => $data]));
     }
     
     public function array(): array
