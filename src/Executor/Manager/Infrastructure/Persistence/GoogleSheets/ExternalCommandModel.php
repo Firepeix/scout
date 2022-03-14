@@ -15,6 +15,7 @@ class ExternalCommandModel
     private const RESPONSE_CODE_FIELD = 2;
     private const RESPONSE_BODY_FIELD = 3;
     private const CREATED_AT_FIELD    = 4;
+    private const REQUEST_ID_FIELD    = 5;
     
     private string  $id;
     private string  $commandName;
@@ -116,7 +117,8 @@ class ExternalCommandModel
             self::BODY_FIELD          => '',
             self::RESPONSE_CODE_FIELD => '',
             self::RESPONSE_BODY_FIELD => '',
-            self::CREATED_AT_FIELD    => ''
+            self::CREATED_AT_FIELD    => '',
+            self::REQUEST_ID_FIELD    => ''
         ];
     }
 }
