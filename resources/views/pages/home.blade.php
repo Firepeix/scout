@@ -84,11 +84,7 @@
               this.loading.cleanLogs = true;
               const response = await axios.delete(`${window.ENV.URL}/logs`);
               this.loading.cleanLogs = false;
-              if (response.data.success) {
-                this.displaySuccess('Logs Limpos!');
-                return;
-              }
-              this.displayError();
+              this.displaySuccess(response.data.message);
             } catch (error) {
               this.loading.cleanLogs = false;
               this.displayError(error.message);
@@ -99,12 +95,8 @@
               this.loading.postpone = true;
               const response = await axios.put(`${window.ENV.URL}/books/${id}/postpone`);
               this.loading.postpone = false;
-              if (response.data.success) {
-                this.displaySuccess('Capitulo Adiado!');
-                this.postponeRow(id);
-                return;
-              }
-              this.displayError();
+              this.displaySuccess(response.data.message);
+              this.postponeRow(id);
             } catch (error) {
               this.loading.postpone = false;
               this.displayError(error.message);
@@ -123,12 +115,8 @@
               this.loading.postpone = true;
               const response = await axios.put(`${window.ENV.URL}/books/${id}/turn-on`);
               this.loading.postpone = false;
-              if (response.data.success) {
-                this.displaySuccess('Vigia de capitulo iniciado!');
-                this.turnOnRow(id);
-                return;
-              }
-              this.displayError();
+              this.displaySuccess(response.data.message);
+              this.turnOnRow(id);
             } catch (error) {
               this.loading.postpone = false;
               this.displayError(error.message);
@@ -147,12 +135,8 @@
               this.loading.markAsRead = true;
               const response = await axios.put(`${window.ENV.URL}/books/${id}/read`);
               this.loading.markAsRead = false;
-              if (response.data.success) {
-                this.displaySuccess('Capitulo Lido!');
-                this.readRow(id);
-                return;
-              }
-              this.displayError();
+              this.displaySuccess(response.data.message);
+              this.readRow(id);
             } catch (error) {
               this.loading.markAsRead = false;
               this.displayError(error.message);

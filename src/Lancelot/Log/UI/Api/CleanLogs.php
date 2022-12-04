@@ -13,7 +13,6 @@ class CleanLogs extends Controller
 {
     public function __invoke(): JsonResponse
     {
-        sleep(5);
         $this->dispatchSync(new CleanLogsCommand());
         return new SuccessResponse("Logs deletados com sucesso");
     }
