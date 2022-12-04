@@ -9,9 +9,11 @@ use Lancelot\Log\Infrastructure\Http\NewRelic\Log\PostLogRequest;
 
 class LogService implements LogServiceInterface
 {
+    private const MINIMUM_LOG_AMOUNT = 20;
+    
     public function alertShouldBeNecessary(Collection $logs): void
     {
-        if ($logs->isNotEmpty()) {
+        if ($logs->count() >= self::MINIMUM_LOG_AMOUNT) {
             event(new AlertErrorsOverflowed());
         }
     }

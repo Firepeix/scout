@@ -2,6 +2,7 @@
 
 namespace Scout\Book\Infrastructure\Providers;
 
+use Scout\Book\UI\Api\Book\GetBooksAction;
 use Scout\Book\UI\Api\Book\PostponeBookAction;
 use Scout\Book\UI\Api\Book\ReadBookAction;
 use Scout\Book\UI\Api\Book\TurnOnBookAction;
@@ -14,6 +15,7 @@ class RouteServiceProvider extends BaseRouteProvider
         GetBooksDashboard::class,
         PostponeBookAction::class,
         TurnOnBookAction::class,
-        ReadBookAction::class
+        ReadBookAction::class,
+        GetBooksAction::class
     ];
 }
