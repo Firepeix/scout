@@ -43,7 +43,7 @@ class DispatchCommandsCommandHandler  implements CommandHandlerInterface
             } catch (Exception $exception) {
                 $this->logger->error("Error no loop de comando", ['exception' => $exception]);
             }
-            sleep(5);
+            sleep(20);
         }
     }
 }
